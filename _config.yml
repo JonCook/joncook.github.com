@@ -3,9 +3,9 @@
 # ----------------------- #
 
 url: http://JonCook.github.com
-title: My Octopress Blog - Jon Cook
-subtitle: A blogging framework for hackers.
-author: Your Name
+title: Jon Cook's Blog
+subtitle: Coder for The BBC. Cycling obsessive and writer for cyclosport.org 
+author: Jon Cook
 simple_search: http://google.com/search
 description:
 
@@ -65,7 +65,7 @@ github_skip_forks: true
 
 # Twitter
 twitter_user: CookyBear
-twitter_tweet_count: 4
+twitter_tweet_count: 3
 twitter_show_replies: false
 twitter_follow_button: true
 twitter_show_follower_count: false
@@ -96,4 +96,4 @@ disqus_show_comment_count: false
 google_analytics_tracking_id:
 
 # Facebook Like
-facebook_like: false
+facebook_like: true
