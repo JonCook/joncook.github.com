@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Jon's Blog</title>
+  <title>Category: XQuery - Jon's Blog</title>
   <meta name="author" content="Jon Cook">
 
   
-  <meta name="description" content="I&#8217;ve recently been doing some work building RESTFul API&#8217;s backed by a Mark Logic XML Content Store utilising XQuery for document &hellip;">
+  <meta name="description" content="Category: XQuery">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://JonCook.github.com">
+  <link rel="canonical" href="http://JonCook.github.comblog/categories/xquery">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -62,104 +62,40 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article role="article">
   
-  
-  
-    <article>
-      
   <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">Evaluating Mark Logic XQuery Performance</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-12T19:36:00+00:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
-        
-      </p>
+    <h1 class="entry-title">Category: XQuery</h1>
     
   </header>
-
-
-  <div class="entry-content"><p>I&#8217;ve recently been doing some work building RESTFul API&#8217;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval. This post details the steps involved in tuning what was deemed to be the most simplest of queries for optimum performance using some useful Mark Logic extensions for profiling.</p>
-
-<h3>Original Query</h3>
-
-<hr />
-
-<p>XQuery for looking up documents based on the value of a given attribute in the xml using XPath. (What could be simpler!)</p>
-
-<div><script src='https://gist.github.com/1810958.js?file=document_by_url.xqy'></script>
-<noscript><pre><code>xquery version &quot;1.0-ml&quot;;
-
-let $public_url := &quot;%s&quot;
-
-let $results := /*[
-    /*/itemMeta/url[@href=$public_url]
-    ]
-
-let $asset := $results[1]
-return $asset</code></pre></noscript></div>
-
-
-<h3>Evaluating Performance</h3>
-
-<hr />
-
-<p>By default Mark Logic indexes the document structure and attributes <strong>are</strong> indexed by default as part of the universal index.</p>
-
-<h4>1. Adding xdmp:query-meters</h4>
-
-<p>By adding xdmp:query-meters() to the query we get some immediate feedback about how the query performs including elapsed time and the number of fragments and documents that were selected. Altering the above query as below gives us some interesting metrics and the query is taking nearly 2 seconds.</p>
-
-<div><script src='https://gist.github.com/1810958.js?file=document_by_url_with_xdmp_query_meters.xqy'></script>
-<noscript><pre><code>return $asset,
-xdmp:query-meters()</code></pre></noscript></div>
+  
+  <div id="blog-archives" class="category">
 
 
 
+  
+  <h2>2012</h2>
 
-<div><script src='https://gist.github.com/1810958.js?file=result_of_xdmp_query_meters.xml'></script>
-<noscript><pre><code>&lt;qm:elapsed-time&gt;PT1.802604S&lt;/qm:elapsed-time&gt;
-&lt;qm:requests&gt;0&lt;/qm:requests&gt;
-&lt;qm:list-cache-hits&gt;3&lt;/qm:list-cache-hits&gt;
-&lt;qm:list-cache-misses&gt;0&lt;/qm:list-cache-misses&gt;
-&lt;qm:in-memory-list-hits&gt;1&lt;/qm:in-memory-list-hits&gt;
-&lt;qm:expanded-tree-cache-hits&gt;43762&lt;/qm:expanded-tree-cache-hits&gt;
-&lt;qm:documents&gt;</code></pre></noscript></div>
+<article>
+  
+<h1><a href="/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">Evaluating Mark Logic XQuery Performance</a></h1>
+<time datetime="2012-02-12T19:36:00+00:00" pubdate><span class='month'>Feb</span> <span class='day'>12</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/marklogic/'>MarkLogic</a>, <a class='category' href='/blog/categories/xquery/'>XQuery</a></span>
+</footer>
 
 
-<p>Immediately something looks a bit suspicious as all the documents in the database are being returned which would indicate that the query is not making effective use of Mark Logic&#8217;s Indexes.</p>
+</article>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
   
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
+</article>
+
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -176,7 +112,7 @@ xdmp:query-meters()</code></pre></noscript></div>
 <section>
   <h1>Github Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/JonCook">@JonCook</a> on Github
@@ -206,7 +142,7 @@ xdmp:query-meters()</code></pre></noscript></div>
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -225,6 +161,7 @@ xdmp:query-meters()</code></pre></noscript></div>
 
   
 </aside>
+
 
     </div>
   </div>

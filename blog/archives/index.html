@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Jon Cook's Blog</title>
+  <title>Blog Archive - Jon's Blog</title>
   <meta name="author" content="Jon Cook">
 
   
-  <meta name="description" content=" Blog Archive Recent Posts Latest Tweets Status updating... $.domReady(function(){ getTwitterFeed("CookyBear", 3, false); }); Follow @CookyBear ">
+  <meta name="description" content="Blog Archive 2012 Evaluating Mark Logic XQuery Performance
+Feb 12 2012 posted in MarkLogic, XQuery Recent Posts Evaluating Mark Logic XQuery &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +25,7 @@
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Jon Cook's Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Jon's Blog" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -35,7 +36,7 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Jon Cook's Blog</a></h1>
+  <h1><a href="/">Jon's Blog</a></h1>
   
     <h2>Coder for The BBC. Cycling obsessive and writer for cyclosport.org</h2>
   
@@ -72,6 +73,23 @@
   
   <div id="blog-archives">
 
+
+
+  
+  <h2>2012</h2>
+
+<article>
+  
+<h1><a href="/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">Evaluating Mark Logic XQuery Performance</a></h1>
+<time datetime="2012-02-12T19:36:00+00:00" pubdate><span class='month'>Feb</span> <span class='day'>12</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/marklogic/'>MarkLogic</a>, <a class='category' href='/blog/categories/xquery/'>XQuery</a></span>
+</footer>
+
+
+</article>
+
 </div>
 
   
@@ -85,7 +103,40 @@
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
+      <li class="post">
+        <a href="/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">Evaluating Mark Logic XQuery Performance</a>
+      </li>
+    
   </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/JonCook">@JonCook</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'JonCook',
+            count: 2,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
 
@@ -122,6 +173,19 @@
 
 </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'jonscodingblog';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 
