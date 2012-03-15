@@ -4,7 +4,7 @@
   <title><![CDATA[Category: XQuery | Jon's Blog]]></title>
   <link href="http://JonCook.github.com/blog/categories/xquery/atom.xml" rel="self"/>
   <link href="http://JonCook.github.com/"/>
-  <updated>2012-03-10T21:08:27+00:00</updated>
+  <updated>2012-03-15T16:08:57+00:00</updated>
   <id>http://JonCook.github.com/</id>
   <author>
     <name><![CDATA[Jon Cook]]></name>
@@ -12,6 +12,149 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Useful XQuery]]></title>
+    <link href="http://JonCook.github.com/blog/2012/03/15/useful-xquery/"/>
+    <updated>2012-03-15T13:58:00+00:00</updated>
+    <id>http://JonCook.github.com/blog/2012/03/15/useful-xquery</id>
+    <content type="html"><![CDATA[<p>As I mentioned in my previous <a href="http://joncook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">blog post</a> I've recently been doing some work building RESTFul API's backed by a Mark Logic XML Content Store utilising XQuery for document retrieval which has led me come up with the following useful snippets of XQuery that I thought I would share. They could easily be altered to work with slightly different requirements.</p>
+
+<h3>List all the document uris in database</h3>
+
+<hr />
+
+<p><div><script src='https://gist.github.com/2039314.js?file=list_all_document_uris.xqy'></script>
+<noscript><pre><code>for $i in collection() return document-uri($i)</code></pre></noscript></div>
+</p>
+
+<h3>List all the document uris in database based on some criteria</h3>
+
+<hr />
+
+<p>In this case we are restricting the documents that exist in the /sitemap/ directory and end with sitemap.xml and do not contain archive in the uri
+<div><script src='https://gist.github.com/2039314.js?file=list_document_uris_where_uri_matches_criteria.xqy'></script>
+<noscript><pre><code>for $d in xdmp:directory(&quot;/sitemap/&quot;, &quot;infinity&quot;)
+  where fn:ends-with(fn:document-uri($d), &quot;sitemap.xml&quot;)
+  and not fn:contains(fn:document-uri($d), &quot;archive&quot;)
+  return fn:document-uri($d)</code></pre></noscript></div>
+</p>
+
+<h3>Delete all the document in the database</h3>
+
+<hr />
+
+<p><div><script src='https://gist.github.com/2039314.js?file=delete_all_documents.xqy'></script>
+<noscript><pre><code>for $i in collection() return xdmp:document-delete(fn:document-uri($i))</code></pre></noscript></div>
+</p>
+
+<h3>Delete all the document in database based on some criteria</h3>
+
+<hr />
+
+<p>In this case we are deleting documents that are in the /content/ directory and whose uri ends with NEWSML.xml
+<div><script src='https://gist.github.com/2039314.js?file=delete_documents_where_uri_matches_criteria.xqy'></script>
+<noscript><pre><code>for $d in xdmp:directory(&quot;/content/&quot;, &quot;infinity&quot;)
+  where not(fn:ends-with(fn:document-uri($d), &quot;NEWSML.xml&quot;))
+  return xdmp:document-delete(fn:document-uri($d))</code></pre></noscript></div>
+</p>
+
+<h3>Query a document by an element with a certain value</h3>
+
+<hr />
+
+<p>This could be easily altered to match on any element or attribute in your xml
+<div><script src='https://gist.github.com/2039314.js?file=get_document_where_element_matches_value.xqy'></script>
+<noscript><pre><code>declare namespace bbc = &quot;http://www.bbc.co.uk/content/asset&quot;;
+
+declare variable $visibleUrl := '/news/cucumber/';
+
+let $results := /bbc:index[
+    /bbc:index/bbc:itemMeta/bbc:url[text()=$visibleUrl]
+    ]
+return $results</code></pre></noscript></div>
+</p>
+
+<p>Actually a much more efficient way of doing the same is:
+<div><script src='https://gist.github.com/2039314.js?file=more_efficient_get_document_where_element_matches_value.xqy'></script>
+<noscript><pre><code>import module namespace xinc = &quot;http://marklogic.com/xinclude&quot; at &quot;/MarkLogic/xinclude/xinclude.xqy&quot;;
+declare namespace bbc = &quot;http://www.bbc.co.uk/asset&quot;;
+
+let $public_url := &quot;/news/cucumber&quot;
+let $asset := collection()[bbc:*/bbc:itemMeta/bbc:url/@href eq $public_url]/*
+
+return xinc:node-expand($asset[1])</code></pre></noscript></div>
+</p>
+
+<!-- more -->
+
+
+<p>Slightly more advanced...</p>
+
+<h3>Retrieving document sizes</h3>
+
+<hr />
+
+<p>Very useful for getting a view of the size of your documents
+<div><script src='https://gist.github.com/2039314.js?file=document_sizes_in_kb.xqy'></script>
+<noscript><pre><code>declare namespace bbc = &quot;http://www.bbc.co.uk/asset&quot;;
+
+let $results := /bbc:*[
+    /bbc:*/bbc:itemMeta/bbc:assetTypeCode[text()='IDX']
+    ]
+
+(: return count($results) :) (: 147 IDX Assets :)
+
+for $d in $results
+order by string-length(xdmp:quote($d)) descending
+return element doc {
+	  element uri {$d/@uri},
+          element url {$d/bbc:itemMeta/bbc:url/@href},
+	  element size {string-length(xdmp:quote($d))},
+          element size-kb {string-length(xdmp:quote($d)) div 1024}
+	}</code></pre></noscript></div>
+</p>
+
+<p>This is how the results are returned
+<div><script src='https://gist.github.com/2039314.js?file=results_of_document_sizes_in_kb.xml'></script>
+<noscript><pre><code>&lt;v:results v:warning=&quot;more than one node&quot;&gt;
+  &lt;doc&gt;
+    &lt;uri uri=&quot;http://www.bbc.co.uk/asset/b53ed8ae-d628-7fbd-e040-850a2c872458/highweb/domestic&quot;/&gt;
+    &lt;url href=&quot;/news/front_page&quot;/&gt;
+    &lt;size&gt;400339&lt;/size&gt;
+    &lt;size-kb&gt;390.9560546875&lt;/size-kb&gt;
+  &lt;/doc&gt;
+  &lt;doc&gt;
+    &lt;uri uri=&quot;http://www.bbc.co.uk/asset/b53ed8ae-d628-7fbd-e040-850a2c872458/highweb/domestic&quot;/&gt;
+    &lt;url href=&quot;/news/front_page&quot;/&gt;
+    &lt;size&gt;400339&lt;/size&gt;
+    &lt;size-kb&gt;390.9560546875&lt;/size-kb&gt;
+  &lt;/doc&gt;
+  &lt;doc&gt;
+    &lt;uri uri=&quot;http://www.bbc.co.uk/asset/b53ed8ae-d628-7fbd-e040-850a2c872458/highweb/domestic&quot;/&gt;
+    &lt;url href=&quot;/news/front_page&quot;/&gt;
+    &lt;size&gt;400339&lt;/size&gt;
+    &lt;size-kb&gt;390.9560546875&lt;/size-kb&gt;
+  &lt;/doc&gt;
+&lt;/v:results&gt;</code></pre></noscript></div>
+</p>
+
+<h3>Adding a depth attribute to your xml documents</h3>
+
+<hr />
+
+<p>Why is this useful I hear you say, demonstrates how to use xdmp:node-replace and xdmp:node-insert-child
+<div><script src='https://gist.github.com/2039314.js?file=adding_a_depth_attribute_to_elements.xqy'></script>
+<noscript><pre><code>let $sitemap := doc('/sitemap/sport-v6/highweb/domestic/sitemap.xml')
+  for $node in $sitemap//*:node
+  let $depth := count($node/ancestor::*)
+return
+  if($node/@depth != '')
+    then (xdmp:node-replace($node/@depth, attribute depth {$depth -1}))
+    else (xdmp:node-insert-child($node, attribute depth {$depth -1}))</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Evaluating Mark Logic XQuery Performance]]></title>

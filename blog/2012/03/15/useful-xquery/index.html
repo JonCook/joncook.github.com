@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Jon's Blog</title>
+  <title>Useful XQuery - Jon's Blog</title>
   <meta name="author" content="Jon Cook">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://JonCook.github.com">
+  <link rel="canonical" href="http://JonCook.github.com/blog/2012/03/15/useful-xquery">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -62,15 +62,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2012/03/15/useful-xquery/">Useful XQuery</a></h1>
+      <h1 class="entry-title">Useful XQuery</h1>
     
     
       <p class="meta">
@@ -93,7 +90,7 @@
   </header>
 
 
-  <div class="entry-content"><p>As I mentioned in my previous <a href="http://joncook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">blog post</a> I&#8217;ve recently been doing some work building RESTFul API&#8217;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval which has led me come up with the following useful snippets of XQuery that I thought I would share. They could easily be altered to work with slightly different requirements.</p>
+<div class="entry-content"><p>As I mentioned in my previous <a href="http://joncook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">blog post</a> I&#8217;ve recently been doing some work building RESTFul API&#8217;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval which has led me come up with the following useful snippets of XQuery that I thought I would share. They could easily be altered to work with slightly different requirements.</p>
 
 <h3>List all the document uris in database</h3>
 
@@ -167,112 +164,138 @@ return xinc:node-expand($asset[1])</code></pre></noscript></div>
 
 
 
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/15/useful-xquery/">Read on &rarr;</a>
-    </footer>
-  
+<!-- more -->
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">Evaluating Mark Logic XQuery Performance</a></h1>
-    
-    
-      <p class="meta">
-        
+<p>Slightly more advanced&#8230;</p>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-12T19:36:00+00:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&#8217;ve recently been doing some work building RESTFul API&#8217;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval. This post details the steps involved in tuning what was deemed to be the most simplest of queries for optimum performance using some useful Mark Logic extensions for profiling.</p>
-
-<h3>Original Query</h3>
+<h3>Retrieving document sizes</h3>
 
 <hr />
 
-<p>XQuery for looking up documents based on the value of a given attribute in the xml using XPath. (What could be simpler!)</p>
+<p>Very useful for getting a view of the size of your documents</p>
 
-<div><script src='https://gist.github.com/1810958.js?file=document_by_url.xqy'></script>
-<noscript><pre><code>xquery version &quot;1.0-ml&quot;;
+<div><script src='https://gist.github.com/2039314.js?file=document_sizes_in_kb.xqy'></script>
+<noscript><pre><code>declare namespace bbc = &quot;http://www.bbc.co.uk/asset&quot;;
 
-let $public_url := &quot;%s&quot;
-
-let $results := /*[
-    /*/itemMeta/url[@href=$public_url]
+let $results := /bbc:*[
+    /bbc:*/bbc:itemMeta/bbc:assetTypeCode[text()='IDX']
     ]
 
-let $asset := $results[1]
-return $asset</code></pre></noscript></div>
+(: return count($results) :) (: 147 IDX Assets :)
+
+for $d in $results
+order by string-length(xdmp:quote($d)) descending
+return element doc {
+      element uri {$d/@uri},
+          element url {$d/bbc:itemMeta/bbc:url/@href},
+      element size {string-length(xdmp:quote($d))},
+          element size-kb {string-length(xdmp:quote($d)) div 1024}
+    }</code></pre></noscript></div>
 
 
-<h3>Evaluating Performance</h3>
+<p>This is how the results are returned</p>
+
+<div><script src='https://gist.github.com/2039314.js?file=results_of_document_sizes_in_kb.xml'></script>
+<noscript><pre><code>&lt;v:results v:warning=&quot;more than one node&quot;&gt;
+  &lt;doc&gt;
+    &lt;uri uri=&quot;http://www.bbc.co.uk/asset/b53ed8ae-d628-7fbd-e040-850a2c872458/highweb/domestic&quot;/&gt;
+    &lt;url href=&quot;/news/front_page&quot;/&gt;
+    &lt;size&gt;400339&lt;/size&gt;
+    &lt;size-kb&gt;390.9560546875&lt;/size-kb&gt;
+  &lt;/doc&gt;
+  &lt;doc&gt;
+    &lt;uri uri=&quot;http://www.bbc.co.uk/asset/b53ed8ae-d628-7fbd-e040-850a2c872458/highweb/domestic&quot;/&gt;
+    &lt;url href=&quot;/news/front_page&quot;/&gt;
+    &lt;size&gt;400339&lt;/size&gt;
+    &lt;size-kb&gt;390.9560546875&lt;/size-kb&gt;
+  &lt;/doc&gt;
+  &lt;doc&gt;
+    &lt;uri uri=&quot;http://www.bbc.co.uk/asset/b53ed8ae-d628-7fbd-e040-850a2c872458/highweb/domestic&quot;/&gt;
+    &lt;url href=&quot;/news/front_page&quot;/&gt;
+    &lt;size&gt;400339&lt;/size&gt;
+    &lt;size-kb&gt;390.9560546875&lt;/size-kb&gt;
+  &lt;/doc&gt;
+&lt;/v:results&gt;</code></pre></noscript></div>
+
+
+<h3>Adding a depth attribute to your xml documents</h3>
 
 <hr />
 
-<p>By default Mark Logic indexes the document structure and attributes <strong>are</strong> indexed by default as part of the universal index.</p>
+<p>Why is this useful I hear you say, demonstrates how to use xdmp:node-replace and xdmp:node-insert-child</p>
 
-<h4>1. Adding xdmp:query-meters</h4>
-
-<p>By adding xdmp:query-meters() to the query we get some immediate feedback about how the query performs including elapsed time and the number of fragments and documents that were selected. Altering the above query as below gives us some interesting metrics and the query is taking nearly 2 seconds.</p>
-
-<div><script src='https://gist.github.com/1810958.js?file=document_by_url_with_xdmp_query_meters.xqy'></script>
-<noscript><pre><code>return $asset,
-xdmp:query-meters()</code></pre></noscript></div>
-
-
-
-
-<div><script src='https://gist.github.com/1810958.js?file=result_of_xdmp_query_meters.xml'></script>
-<noscript><pre><code>&lt;qm:elapsed-time&gt;PT1.802604S&lt;/qm:elapsed-time&gt;
-&lt;qm:requests&gt;0&lt;/qm:requests&gt;
-&lt;qm:list-cache-hits&gt;3&lt;/qm:list-cache-hits&gt;
-&lt;qm:list-cache-misses&gt;0&lt;/qm:list-cache-misses&gt;
-&lt;qm:in-memory-list-hits&gt;1&lt;/qm:in-memory-list-hits&gt;
-&lt;qm:expanded-tree-cache-hits&gt;43762&lt;/qm:expanded-tree-cache-hits&gt;
-&lt;qm:documents&gt;</code></pre></noscript></div>
-
-
-<p>Immediately something looks a bit suspicious as all the documents in the database are being returned which would indicate that the query is not making effective use of Mark Logic&#8217;s Indexes.</p>
+<div><script src='https://gist.github.com/2039314.js?file=adding_a_depth_attribute_to_elements.xqy'></script>
+<noscript><pre><code>let $sitemap := doc('/sitemap/sport-v6/highweb/domestic/sitemap.xml')
+  for $node in $sitemap//*:node
+  let $depth := count($node/ancestor::*)
+return
+  if($node/@depth != '')
+    then (xdmp:node-replace($node/@depth, attribute depth {$depth -1}))
+    else (xdmp:node-insert-child($node, attribute depth {$depth -1}))</code></pre></noscript></div>
 
 </div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">Read on &rarr;</a>
-    </footer>
+
+<span class="byline author vcard">Posted by <span class="fn">Jon Cook</span></span>
+
+      
+
+
+
+
+
+
+
+
   
 
 
-    </article>
+<time datetime="2012-03-15T13:58:00+00:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
+      
+
+<span class="categories">
   
-  <div class="pagination">
+    <a class='category' href='/blog/categories/marklogic/'>MarkLogic</a>, <a class='category' href='/blog/categories/xquery/'>XQuery</a>
+  
+</span>
+
+
+    </p>
     
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://JonCook.github.com/blog/2012/03/15/useful-xquery/" data-via="CookyBear" data-counturl="http://JonCook.github.com/blog/2012/03/15/useful-xquery/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/02/12/evaluating-mark-logic-xquery-performance/" title="Previous Post: Evaluating Mark Logic XQuery Performance">&laquo; Evaluating Mark Logic XQuery Performance</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
@@ -293,7 +316,7 @@ xdmp:query-meters()</code></pre></noscript></div>
 <section>
   <h1>Github Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/JonCook">@JonCook</a> on Github
@@ -323,7 +346,7 @@ xdmp:query-meters()</code></pre></noscript></div>
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -343,6 +366,7 @@ xdmp:query-meters()</code></pre></noscript></div>
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -357,7 +381,10 @@ xdmp:query-meters()</code></pre></noscript></div>
       var disqus_shortname = 'jonscodingblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://JonCook.github.com/blog/2012/03/15/useful-xquery/';
+        var disqus_url = 'http://JonCook.github.com/blog/2012/03/15/useful-xquery/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
