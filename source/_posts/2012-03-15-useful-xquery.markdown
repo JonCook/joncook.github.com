@@ -28,7 +28,7 @@ In this case we are deleting documents that are in the /content/ directory and w
 
 ### Query a document by an element with a certain value
 --------------
-This could be easily altered to match on any element or attribute in your xml
+This could be easily altered to match on any element or attribute in your xml.
 {% gist 2039314 get_document_where_element_matches_value.xqy %}
 
 Actually a much more efficient way of doing the same is:
