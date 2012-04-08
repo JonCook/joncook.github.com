@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Apache CXF java Tomcat | Jon's Blog]]></title>
+  <link href="http://JonCook.github.com/blog/categories/apache-cxf-java-tomcat/atom.xml" rel="self"/>
+  <link href="http://JonCook.github.com/"/>
+  <updated>2012-04-08T11:14:31+01:00</updated>
+  <id>http://JonCook.github.com/</id>
+  <author>
+    <name><![CDATA[Jon Cook]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Creating a HTTP Response Version Provider with Apache CXF Filters]]></title>
+    <link href="http://JonCook.github.com/blog/2012/04/07/creating-a-http-response-version-provider-with-apache-cxf-filters/"/>
+    <updated>2012-04-07T22:16:00+01:00</updated>
+    <id>http://JonCook.github.com/blog/2012/04/07/creating-a-http-response-version-provider-with-apache-cxf-filters</id>
+    <content type="html"><![CDATA[<p>We've been using <a href="http://cxf.apache.org/">Apache CXF</a> which has some nice support for building JSR-311 compliant JAX-RS Services and recently had a requirement for sending back a version header as part of out API Responses.</p>
+
+<p>It is generally accepted that versioning APIs is a good thing and adopting the general contract of Major.Minor.Patch covers our needs, now we need to have a standard method of reporting and documenting the APIs and versions. Before we get into the ins and outs of how one you should version an API, we have a company wide recommendation of adding a custom response header to each response <strong>X-API-Version: d.d.d</strong> which I have to say I'm in favour over embedding the version in the url and is also the method adopted by Sun’s Cloud API - which is commonly held to be a benchmark implementation of REST.</p>
+
+<p>Using <a href="http://cxf.apache.org/docs/jax-rs-filters.html">Apache CXF Filters</a> led to this fairly elegant and simple solution which could be applied to add any type of additional headers but I found the documentation a little confusing so decided to write a post on it.</p>
+
+<h3>Some backgroud about apply response filters</h3>
+
+<p>By implementing:
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">org.apache.cxf.jaxrs.ext.ResponseHandler</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>And overriding:
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">Response</span> <span class="nf">handleResponse</span><span class="o">(</span><span class="n">Message</span> <span class="n">message</span><span class="o">,</span> <span class="n">OperationResourceInfo</span> <span class="n">info</span><span class="o">,</span> <span class="n">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">Response</span><span class="o">.</span><span class="na">ok</span><span class="o">().</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Perhaps you want to do custom logging or additional processing in the above method but more interestingly the response handler implementation can optionally overwrite or modify the application Response or modify the output message the first of which we are interested in.</p>
+
+<h3>The TDD way - starting with a test</h3>
+
+<p>Starting off with the simplest scenario which for me is that the X-API-Version header should be present in the response. I've skipped ahead a few steps here but hopefully you get the idea</p>
+
+<p>``` java
+@Test
+public void handleResponseShouldAddXAPIVersionHeader() throws Exception {</p>
+
+<pre><code>HttpResponseVersionProvider versionProvider = new HttpResponseVersionProvider("1.1.11");
+
+Response versionedResponse = versionProvider.handleResponse(null, null, null);
+assertEquals("1.1.11", versionedResponse.getMetadata().get("X-API-Version").get(0));
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>Diving into our HttpResponseVersionProvider</h3>
+
+<p>So remember we are just doing the simplest thing thing possible to make the test pass</p>
+]]></content>
+  </entry>
+  
+</feed>
