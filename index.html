@@ -9,7 +9,7 @@
   <meta name="author" content="Jon Cook">
 
   
-  <meta name="description" content="I&#8217;ve been using Apache CXF which has some nice support for building JSR-311 compliant JAX-RS Services and recently had a requirement for &hellip;">
+  <meta name="description" content="I wanted to test out the HTTP response codes from a number of our API endpoints. There is numerous ways to approach this but I thought it would be &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +64,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/30/some-bash-fu-with-curl/">Some Bash Fu With Curl, Grep, Awk and Pipes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-30T01:15:00+01:00" pubdate data-updated="true">Apr 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I wanted to test out the HTTP response codes from a number of our API endpoints. There is numerous ways to approach this but I thought it would be fun to use the command line and it turned out pretty straight forward.</p>
+
+<p>First off I created a file with some urls in e.g.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://www.google.co.uk
+</span><span class='line'>http://www.bbc.co.uk
+</span><span class='line'>http://www.arsenal.com</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And ran the following command:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@pal ~]# grep "$1" urls.txt | awk '{print "curl --write-out "$0"=http-%{http_code}\"\n\" --silent --output /dev/null "$0'} | sh &gt;&gt; responses.txt</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This takes each line (url) and passes the argument to curl before outputting the url and http response code for said url into a file called responses.txt</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://www.google.co.uk=http-200
+</span><span class='line'>http://www.bbc.co.uk=http-200
+</span><span class='line'>http://www.arsenal.com=http-302</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can then grep to count the number of different http response codes e.g.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@pal ~]# grep -c http-200 responses.txt
+</span><span class='line'>2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In reality I ran the following command as wanted to do something a bit more complicated with curl by specifying certs and custom headers</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>grep "$1" urls.txt | awk '{print "curl --cert /etc/pki/my-pem.pem --cacert /etc/my-ca.pem -H \"Accept:application/json\" -H \"X-Candy-Audience:Domestic\" -H \"X-Candy-Platform:HighWeb\" --write-out "$0"=http-%{http_code}\"\n\" --silent --output /dev/null "$0'} | sh &gt;&gt; responses.txt</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&#8217;m not suggesting this is the best way to do this but nice not to need any frameworks or libraries. If I want to do this more regularly I will probably use a cucumber feature and setup a job in our CI environment not, forgetting a nice looking report but for now this is fine.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -323,6 +401,10 @@ xdmp:query-meters()</code></pre></noscript></div>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/30/some-bash-fu-with-curl/">Some Bash Fu with Curl, Grep, Awk and Pipes</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/04/07/creating-a-http-response-version-provider-with-apache-cxf-filters/">Creating a HTTP Response Version Provider with Apache CXF Filters</a>
