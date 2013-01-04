@@ -12,6 +12,7 @@ group :development do
   gem 'rubypants'
   gem 'rb-fsevent'
   gem 'stringex'
+  gem 'sass', '3.1.17'
   gem 'liquid', '2.2.2'
 end
 
