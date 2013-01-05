@@ -1,21 +1,6 @@
 source "http://rubygems.org"
 
 group :development do
-<<<<<<< HEAD
-  gem 'rake'
-  gem 'rack'
-  gem 'jekyll'
-  gem 'rdiscount'
-  gem 'pygments.rb'
-  gem 'RedCloth'
-  gem 'haml', '>= 3.1'
-  gem 'compass', '>= 0.11'
-  gem 'rubypants'
-  gem 'rb-fsevent'
-  gem 'stringex'
-  gem 'sass', '3.1.17'
-  gem 'liquid', '2.2.2'
-=======
   gem 'rake', '~> 0.9'
   gem 'rack', '~> 1.4.1'
   gem 'jekyll', '~> 0.12'
@@ -28,7 +13,6 @@ group :development do
   gem 'rb-fsevent', '~> 0.9'
   gem 'stringex', '~> 1.4.0'
   gem 'liquid', '~> 2.3.0'
->>>>>>> 0a2fb6c4d86b845d4a80addaf51f7dce1fec03f6
 end
 
 gem 'sinatra', '~> 1.3.3'
