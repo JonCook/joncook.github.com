@@ -70,10 +70,6 @@ github_skip_forks: true
 
 # Twitter
 twitter_user: CookyBear
-twitter_tweet_count: 3
-twitter_show_replies: false
-twitter_follow_button: true
-twitter_show_follower_count: false
 twitter_tweet_button: true
 
 # Google +1
