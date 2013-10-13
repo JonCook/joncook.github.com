@@ -9,7 +9,7 @@
   <meta name="author" content="Jon Cook">
 
   
-  <meta name="description" content="I&#8217;ve recently been doing some work building RESTFul API&#8217;s backed by a Mark Logic XML Content Store utilising XQuery for document &hellip;">
+  <meta name="description" content="I&rsquo;ve recently been doing some work building RESTFul API&rsquo;s backed by a Mark Logic XML Content Store utilising XQuery for document &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,10 +21,11 @@
   <link rel="canonical" href="http://JonCook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Jon's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -83,14 +84,14 @@
   
 
 
-<time datetime="2012-02-12T19:36:00+00:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
+<time datetime="2012-02-12T19:36:00+01:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I&#8217;ve recently been doing some work building RESTFul API&#8217;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval. This post details the steps involved in tuning what was deemed to be the most simplest of queries for optimum performance using some useful Mark Logic extensions for profiling.</p>
+<div class="entry-content"><p>I&rsquo;ve recently been doing some work building RESTFul API&rsquo;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval. This post details the steps involved in tuning what was deemed to be the most simplest of queries for optimum performance using some useful Mark Logic extensions for profiling.</p>
 
 <h3>Original Query</h3>
 
@@ -138,7 +139,7 @@ xdmp:query-meters()</code></pre></noscript></div>
 &lt;qm:documents&gt;</code></pre></noscript></div>
 
 
-<p>Immediately something looks a bit suspicious as all the documents in the database are being returned which would indicate that the query is not making effective use of Mark Logic&#8217;s Indexes.</p>
+<p>Immediately something looks a bit suspicious as all the documents in the database are being returned which would indicate that the query is not making effective use of Mark Logic&rsquo;s Indexes.</p>
 
 <!-- more -->
 
@@ -148,583 +149,18 @@ xdmp:query-meters()</code></pre></noscript></div>
 <p>This can be verified with xdmp:estimate(), purely focusing on the XPath part of the query e.g.</p>
 
 <div><script src='https://gist.github.com/1810958.js?file=document_by_url_with_xdmp_estimate.xqy'></script>
-<noscript><pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head prefix=&quot;og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# githubog: http://ogp.me/ns/fb/githubog#&quot;&gt;
-    &lt;meta charset='utf-8'&gt;
-    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
-        &lt;title&gt;404 · GitHub&lt;/title&gt;
-    &lt;link rel=&quot;search&quot; type=&quot;application/opensearchdescription+xml&quot; href=&quot;/opensearch.xml&quot; title=&quot;GitHub&quot; /&gt;
-    &lt;link rel=&quot;fluid-icon&quot; href=&quot;https://github.com/fluidicon.png&quot; title=&quot;GitHub&quot; /&gt;
-    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
-
-    
-    
-
-    
-
-    &lt;link href=&quot;https://a248.e.akamai.net/assets.github.com/stylesheets/bundles/github-25d3866eecbdad76dacc91ca80d2434cc8f22c04.css&quot; media=&quot;screen&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;
-    &lt;link href=&quot;https://a248.e.akamai.net/assets.github.com/stylesheets/bundles/github2-0362aac7f9b6a26a7d1f5bcb8c3d429a39498c73.css&quot; media=&quot;screen&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;
-    
-
-    &lt;script src=&quot;https://a248.e.akamai.net/assets.github.com/javascripts/bundles/jquery-5b140862bd914d3619171dece9be92269c2b1fe1.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
-    &lt;script src=&quot;https://a248.e.akamai.net/assets.github.com/javascripts/bundles/github-9b054322958355512cd77c5f36c41526133ea833.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
-    
-
-    
-  &lt;/head&gt;
+<noscript><pre><code>return xdmp:estimate(/*[
+    /*/itemMeta/url[@href=$public_url]
+    ])</code></pre></noscript></div>
 
 
-  &lt;body class=&quot;logged_out    env-production &quot; data-blob-contribs-enabled=&quot;yes&quot;&gt;
-    
-    
-    
-
-      &lt;div id=&quot;header&quot; class=&quot;true clearfix&quot;&gt;
-        &lt;div class=&quot;container clearfix&quot;&gt;
-          &lt;a class=&quot;site-logo&quot; href=&quot;https://github.com&quot;&gt;
-            &lt;!--[if IE]&gt;
-            &lt;img alt=&quot;GitHub&quot; class=&quot;github-logo&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/header/logov7.png?1323882778&quot; /&gt;
-            &lt;img alt=&quot;GitHub&quot; class=&quot;github-logo-hover&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/header/logov7-hover.png?1324325424&quot; /&gt;
-            &lt;![endif]--&gt;
-            &lt;img alt=&quot;GitHub&quot; class=&quot;github-logo-4x&quot; height=&quot;30&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/header/logov7@4x.png?1323882778&quot; /&gt;
-            &lt;img alt=&quot;GitHub&quot; class=&quot;github-logo-4x-hover&quot; height=&quot;30&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/header/logov7@4x-hover.png?1324325424&quot; /&gt;
-          &lt;/a&gt;
-
-                  &lt;!--
-      make sure to use fully qualified URLs here since this nav
-      is used on error pages on other domains
-    --&gt;
-    &lt;ul class=&quot;top-nav logged_out&quot;&gt;
-        &lt;li class=&quot;pricing&quot;&gt;&lt;a href=&quot;https://github.com/plans&quot;&gt;Signup and Pricing&lt;/a&gt;&lt;/li&gt;
-        &lt;li class=&quot;explore&quot;&gt;&lt;a href=&quot;https://github.com/explore&quot;&gt;Explore GitHub&lt;/a&gt;&lt;/li&gt;
-      &lt;li class=&quot;features&quot;&gt;&lt;a href=&quot;https://github.com/features&quot;&gt;Features&lt;/a&gt;&lt;/li&gt;
-        &lt;li class=&quot;blog&quot;&gt;&lt;a href=&quot;https://github.com/blog&quot;&gt;Blog&lt;/a&gt;&lt;/li&gt;
-      &lt;li class=&quot;login&quot;&gt;&lt;a href=&quot;https://github.com/login?return_to=%2Fgist%2F1810958%2Fdocument_by_url_with_xdmp_estimate.xqy&quot;&gt;Login&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-
-
-
-          
-        &lt;/div&gt;
-      &lt;/div&gt;
-
-      
-
-        &lt;div class=&quot;site clearfix&quot;&gt;
-          &lt;div class=&quot;container&quot;&gt;
-            
-
-&lt;style type=&quot;text/css&quot;&gt;
-    #header{
-        border-bottom: 0;
-    }
-    .site{
-        padding: 0;
-        margin-top: -20px;
-    }
-    * {
-        margin: 0px;
-        padding: 0px;
-    }
-    #parallax_field{
-        overflow: hidden;
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 370px;
-        width: 100%;
-    }
-    #parallax_field #parallax_bg {
-        position: absolute;
-        top: -20px;
-        left: -20px;
-        width: 110%;
-        height: 425px;
-        z-index: 1;
-    }
-    #parallax_illustration {
-        display:block;
-        width: 940px;
-        height: 370px;
-        position: relative;
-        overflow: hidden;
-        clear: both;
-    }
-    #parallax_illustration #parallax_error_text {
-        position: absolute;
-        top: 72px;
-        left: 72px;
-        z-index: 10;
-    }
-    #parallax_illustration #parallax_octocat {
-        position: absolute;
-        top: 94px;
-        left: 356px;
-        z-index: 9;
-    }
-    #parallax_illustration #parallax_speeder {
-        position: absolute;
-        top: 150px;
-        left: 432px;
-        z-index: 8;
-    }
-    #parallax_illustration #parallax_octocatshadow {
-        position: absolute;
-        top: 297px;
-        left: 371px;
-        z-index: 7;
-    }
-    #parallax_illustration #parallax_speedershadow {
-        position: absolute;
-        top: 263px;
-        left: 442px;
-        z-index: 6;
-    }
-    #parallax_illustration #parallax_building_1 {
-        position: absolute;
-        top: 73px;
-        left: 467px;
-        z-index: 5;
-    }
-    #parallax_illustration #parallax_building_2 {
-        position: absolute;
-        top: 113px;
-        left: 762px;
-        z-index: 4;
-    }
-    #footer {
-        margin-top: 0px;
-        z-index: 12;
-    }
-&lt;/style&gt;
-
-
-&lt;div id=&quot;parallax_field&quot;&gt;
-    &lt;img alt=&quot;building&quot; class=&quot;js-plaxify&quot; data-invert=&quot;true&quot; data-xrange=&quot;0&quot; data-yrange=&quot;20&quot; height=&quot;415&quot; id=&quot;parallax_bg&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_bg.jpg?1293753715&quot; width=&quot;940&quot; /&gt;
-&lt;/div&gt;
-&lt;div id=&quot;parallax_illustration&quot;&gt;
-  &lt;img alt=&quot;404 | &amp;ldquo;This is not the web page you are looking for&amp;rdquo;&quot; class=&quot;js-plaxify&quot; data-xrange=&quot;20&quot; data-yrange=&quot;10&quot; height=&quot;249&quot; id=&quot;parallax_error_text&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png?1293753715&quot; width=&quot;271&quot; /&gt;
-  &lt;img alt=&quot;Octobi Wan Catnobi&quot; class=&quot;js-plaxify&quot; data-xrange=&quot;10&quot; data-yrange=&quot;10&quot; height=&quot;230&quot; id=&quot;parallax_octocat&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocat.png?1293753715&quot; width=&quot;188&quot; /&gt;
-  &lt;img alt=&quot;land speeder&quot; class=&quot;js-plaxify&quot; data-xrange=&quot;10&quot; data-yrange=&quot;10&quot; height=&quot;156&quot; id=&quot;parallax_speeder&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_speeder.png?1293753715&quot; width=&quot;440&quot; /&gt;
-  &lt;img alt=&quot;Octobi Wan Catnobi's shadow&quot; class=&quot;js-plaxify&quot; data-xrange=&quot;10&quot; data-yrange=&quot;10&quot; height=&quot;49&quot; id=&quot;parallax_octocatshadow&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_octocatshadow.png?1293753715&quot; width=&quot;166&quot; /&gt;
-  &lt;img alt=&quot;land speeder's shadow&quot; class=&quot;js-plaxify&quot; data-xrange=&quot;10&quot; data-yrange=&quot;10&quot; height=&quot;75&quot; id=&quot;parallax_speedershadow&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_speedershadow.png?1293753715&quot; width=&quot;430&quot; /&gt;
-  &lt;img alt=&quot;building&quot; class=&quot;js-plaxify&quot; data-invert=&quot;true&quot; data-xrange=&quot;50&quot; data-yrange=&quot;20&quot; height=&quot;123&quot; id=&quot;parallax_building_1&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_building_1.png?1293753715&quot; width=&quot;304&quot; /&gt;
-  &lt;img alt=&quot;building&quot; class=&quot;js-plaxify&quot; data-invert=&quot;true&quot; data-xrange=&quot;75&quot; data-yrange=&quot;30&quot; height=&quot;50&quot; id=&quot;parallax_building_2&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_building_2.png?1293753715&quot; width=&quot;116&quot; /&gt;
-&lt;/div&gt;
-
-          &lt;/div&gt;
-          &lt;div class=&quot;context-overlay&quot;&gt;&lt;/div&gt;
-        &lt;/div&gt;
-
-      &lt;!-- footer --&gt;
-      &lt;div id=&quot;footer&quot; &gt;
-        
-  &lt;div class=&quot;upper_footer&quot;&gt;
-     &lt;div class=&quot;container clearfix&quot;&gt;
-
-       &lt;!--[if IE]&gt;&lt;h4 id=&quot;blacktocat_ie&quot;&gt;GitHub Links&lt;/h4&gt;&lt;![endif]--&gt;
-       &lt;![if !IE]&gt;&lt;h4 id=&quot;blacktocat&quot;&gt;GitHub Links&lt;/h4&gt;&lt;![endif]&gt;
-
-       &lt;ul class=&quot;footer_nav&quot;&gt;
-         &lt;h4&gt;GitHub&lt;/h4&gt;
-         &lt;li&gt;&lt;a href=&quot;https://github.com/about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;https://github.com/blog&quot;&gt;Blog&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;https://github.com/features&quot;&gt;Features&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;https://github.com/contact&quot;&gt;Contact &amp;amp; Support&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;https://github.com/training&quot;&gt;Training&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://enterprise.github.com/&quot;&gt;GitHub Enterprise&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://status.github.com/&quot;&gt;Site Status&lt;/a&gt;&lt;/li&gt;
-       &lt;/ul&gt;
-
-       &lt;ul class=&quot;footer_nav&quot;&gt;
-         &lt;h4&gt;Tools&lt;/h4&gt;
-         &lt;li&gt;&lt;a href=&quot;http://get.gaug.es/&quot;&gt;Gauges: Analyze web traffic&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://speakerdeck.com&quot;&gt;Speaker Deck: Presentations&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;https://gist.github.com&quot;&gt;Gist: Code snippets&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://mac.github.com/&quot;&gt;GitHub for Mac&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://mobile.github.com/&quot;&gt;Issues for iPhone&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://jobs.github.com/&quot;&gt;Job Board&lt;/a&gt;&lt;/li&gt;
-       &lt;/ul&gt;
-
-       &lt;ul class=&quot;footer_nav&quot;&gt;
-         &lt;h4&gt;Extras&lt;/h4&gt;
-         &lt;li&gt;&lt;a href=&quot;http://shop.github.com/&quot;&gt;GitHub Shop&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://octodex.github.com/&quot;&gt;The Octodex&lt;/a&gt;&lt;/li&gt;
-       &lt;/ul&gt;
-
-       &lt;ul class=&quot;footer_nav&quot;&gt;
-         &lt;h4&gt;Documentation&lt;/h4&gt;
-         &lt;li&gt;&lt;a href=&quot;http://help.github.com/&quot;&gt;GitHub Help&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://developer.github.com/&quot;&gt;Developer API&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://github.github.com/github-flavored-markdown/&quot;&gt;GitHub Flavored Markdown&lt;/a&gt;&lt;/li&gt;
-         &lt;li&gt;&lt;a href=&quot;http://pages.github.com/&quot;&gt;GitHub Pages&lt;/a&gt;&lt;/li&gt;
-       &lt;/ul&gt;
-
-     &lt;/div&gt;&lt;!-- /.site --&gt;
-  &lt;/div&gt;&lt;!-- /.upper_footer --&gt;
-
-&lt;div class=&quot;lower_footer&quot;&gt;
-  &lt;div class=&quot;container clearfix&quot;&gt;
-    &lt;!--[if IE]&gt;&lt;div id=&quot;legal_ie&quot;&gt;&lt;![endif]--&gt;
-    &lt;![if !IE]&gt;&lt;div id=&quot;legal&quot;&gt;&lt;![endif]&gt;
-      &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;https://github.com/site/terms&quot;&gt;Terms of Service&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;https://github.com/site/privacy&quot;&gt;Privacy&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;https://github.com/security&quot;&gt;Security&lt;/a&gt;&lt;/li&gt;
-      &lt;/ul&gt;
-
-      &lt;p&gt;&amp;copy; 2012 &lt;span title=&quot;0.02419s from fe6.rs.github.com&quot;&gt;GitHub&lt;/span&gt; Inc. All rights reserved.&lt;/p&gt;
-    &lt;/div&gt;&lt;!-- /#legal or /#legal_ie--&gt;
-
-      &lt;div class=&quot;sponsor&quot;&gt;
-        &lt;a href=&quot;http://www.rackspace.com&quot; class=&quot;logo&quot;&gt;
-          &lt;img alt=&quot;Dedicated Server&quot; height=&quot;36&quot; src=&quot;https://a248.e.akamai.net/assets.github.com/images/modules/footer/rackspaces_logo.png?1329521041&quot; width=&quot;38&quot; /&gt;
-        &lt;/a&gt;
-        Powered by the &lt;a href=&quot;http://www.rackspace.com &quot;&gt;Dedicated
-        Servers&lt;/a&gt; and&lt;br/&gt; &lt;a href=&quot;http://www.rackspacecloud.com&quot;&gt;Cloud
-        Computing&lt;/a&gt; of Rackspace Hosting&lt;span&gt;&amp;reg;&lt;/span&gt;
-      &lt;/div&gt;
-  &lt;/div&gt;&lt;!-- /.site --&gt;
-&lt;/div&gt;&lt;!-- /.lower_footer --&gt;
-
-      &lt;/div&gt;&lt;!-- /#footer --&gt;
-
-    
-
-&lt;div id=&quot;keyboard_shortcuts_pane&quot; class=&quot;instapaper_ignore readability-extra&quot; style=&quot;display:none&quot;&gt;
-  &lt;h2&gt;Keyboard Shortcuts &lt;small&gt;&lt;a href=&quot;#&quot; class=&quot;js-see-all-keyboard-shortcuts&quot;&gt;(see all)&lt;/a&gt;&lt;/small&gt;&lt;/h2&gt;
-
-  &lt;div class=&quot;columns threecols&quot;&gt;
-    &lt;div class=&quot;column first&quot;&gt;
-      &lt;h3&gt;Site wide shortcuts&lt;/h3&gt;
-      &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-        &lt;dt&gt;s&lt;/dt&gt;
-        &lt;dd&gt;Focus site search&lt;/dd&gt;
-      &lt;/dl&gt;
-      &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-        &lt;dt&gt;?&lt;/dt&gt;
-        &lt;dd&gt;Bring up this help dialog&lt;/dd&gt;
-      &lt;/dl&gt;
-    &lt;/div&gt;&lt;!-- /.column.first --&gt;
-
-    &lt;div class=&quot;column middle&quot; style='display:none'&gt;
-      &lt;h3&gt;Commit list&lt;/h3&gt;
-      &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-        &lt;dt&gt;j&lt;/dt&gt;
-        &lt;dd&gt;Move selection down&lt;/dd&gt;
-      &lt;/dl&gt;
-      &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-        &lt;dt&gt;k&lt;/dt&gt;
-        &lt;dd&gt;Move selection up&lt;/dd&gt;
-      &lt;/dl&gt;
-      &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-        &lt;dt&gt;c &lt;em&gt;or&lt;/em&gt; o &lt;em&gt;or&lt;/em&gt; enter&lt;/dt&gt;
-        &lt;dd&gt;Open commit&lt;/dd&gt;
-      &lt;/dl&gt;
-      &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-        &lt;dt&gt;y&lt;/dt&gt;
-        &lt;dd&gt;Expand URL to its canonical form&lt;/dd&gt;
-      &lt;/dl&gt;
-    &lt;/div&gt;&lt;!-- /.column.first --&gt;
-
-    &lt;div class=&quot;column last&quot; style='display:none'&gt;
-      &lt;h3&gt;Pull request list&lt;/h3&gt;
-      &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-        &lt;dt&gt;j&lt;/dt&gt;
-        &lt;dd&gt;Move selection down&lt;/dd&gt;
-      &lt;/dl&gt;
-      &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-        &lt;dt&gt;k&lt;/dt&gt;
-        &lt;dd&gt;Move selection up&lt;/dd&gt;
-      &lt;/dl&gt;
-      &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-        &lt;dt&gt;o &lt;em&gt;or&lt;/em&gt; enter&lt;/dt&gt;
-        &lt;dd&gt;Open issue&lt;/dd&gt;
-      &lt;/dl&gt;
-    &lt;/div&gt;&lt;!-- /.columns.last --&gt;
-
-  &lt;/div&gt;&lt;!-- /.columns.equacols --&gt;
-
-  &lt;div style='display:none'&gt;
-    &lt;div class=&quot;rule&quot;&gt;&lt;/div&gt;
-
-    &lt;h3&gt;Issues&lt;/h3&gt;
-
-    &lt;div class=&quot;columns threecols&quot;&gt;
-      &lt;div class=&quot;column first&quot;&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;j&lt;/dt&gt;
-          &lt;dd&gt;Move selection down&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;k&lt;/dt&gt;
-          &lt;dd&gt;Move selection up&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;x&lt;/dt&gt;
-          &lt;dd&gt;Toggle selection&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;o &lt;em&gt;or&lt;/em&gt; enter&lt;/dt&gt;
-          &lt;dd&gt;Open issue&lt;/dd&gt;
-        &lt;/dl&gt;
-      &lt;/div&gt;&lt;!-- /.column.first --&gt;
-      &lt;div class=&quot;column middle&quot;&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;I&lt;/dt&gt;
-          &lt;dd&gt;Mark selection as read&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;U&lt;/dt&gt;
-          &lt;dd&gt;Mark selection as unread&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;e&lt;/dt&gt;
-          &lt;dd&gt;Close selection&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;y&lt;/dt&gt;
-          &lt;dd&gt;Remove selection from view&lt;/dd&gt;
-        &lt;/dl&gt;
-      &lt;/div&gt;&lt;!-- /.column.middle --&gt;
-      &lt;div class=&quot;column last&quot;&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;c&lt;/dt&gt;
-          &lt;dd&gt;Create issue&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;l&lt;/dt&gt;
-          &lt;dd&gt;Create label&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;i&lt;/dt&gt;
-          &lt;dd&gt;Back to inbox&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;u&lt;/dt&gt;
-          &lt;dd&gt;Back to issues&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;/&lt;/dt&gt;
-          &lt;dd&gt;Focus issues search&lt;/dd&gt;
-        &lt;/dl&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-
-  &lt;div style='display:none'&gt;
-    &lt;div class=&quot;rule&quot;&gt;&lt;/div&gt;
-
-    &lt;h3&gt;Issues Dashboard&lt;/h3&gt;
-
-    &lt;div class=&quot;columns threecols&quot;&gt;
-      &lt;div class=&quot;column first&quot;&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;j&lt;/dt&gt;
-          &lt;dd&gt;Move selection down&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;k&lt;/dt&gt;
-          &lt;dd&gt;Move selection up&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;o &lt;em&gt;or&lt;/em&gt; enter&lt;/dt&gt;
-          &lt;dd&gt;Open issue&lt;/dd&gt;
-        &lt;/dl&gt;
-      &lt;/div&gt;&lt;!-- /.column.first --&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-
-  &lt;div style='display:none'&gt;
-    &lt;div class=&quot;rule&quot;&gt;&lt;/div&gt;
-
-    &lt;h3&gt;Network Graph&lt;/h3&gt;
-    &lt;div class=&quot;columns equacols&quot;&gt;
-      &lt;div class=&quot;column first&quot;&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;&lt;span class=&quot;badmono&quot;&gt;←&lt;/span&gt; &lt;em&gt;or&lt;/em&gt; h&lt;/dt&gt;
-          &lt;dd&gt;Scroll left&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;&lt;span class=&quot;badmono&quot;&gt;→&lt;/span&gt; &lt;em&gt;or&lt;/em&gt; l&lt;/dt&gt;
-          &lt;dd&gt;Scroll right&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;&lt;span class=&quot;badmono&quot;&gt;↑&lt;/span&gt; &lt;em&gt;or&lt;/em&gt; k&lt;/dt&gt;
-          &lt;dd&gt;Scroll up&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;&lt;span class=&quot;badmono&quot;&gt;↓&lt;/span&gt; &lt;em&gt;or&lt;/em&gt; j&lt;/dt&gt;
-          &lt;dd&gt;Scroll down&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;t&lt;/dt&gt;
-          &lt;dd&gt;Toggle visibility of head labels&lt;/dd&gt;
-        &lt;/dl&gt;
-      &lt;/div&gt;&lt;!-- /.column.first --&gt;
-      &lt;div class=&quot;column last&quot;&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;shift &lt;span class=&quot;badmono&quot;&gt;←&lt;/span&gt; &lt;em&gt;or&lt;/em&gt; shift h&lt;/dt&gt;
-          &lt;dd&gt;Scroll all the way left&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;shift &lt;span class=&quot;badmono&quot;&gt;→&lt;/span&gt; &lt;em&gt;or&lt;/em&gt; shift l&lt;/dt&gt;
-          &lt;dd&gt;Scroll all the way right&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;shift &lt;span class=&quot;badmono&quot;&gt;↑&lt;/span&gt; &lt;em&gt;or&lt;/em&gt; shift k&lt;/dt&gt;
-          &lt;dd&gt;Scroll all the way up&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;shift &lt;span class=&quot;badmono&quot;&gt;↓&lt;/span&gt; &lt;em&gt;or&lt;/em&gt; shift j&lt;/dt&gt;
-          &lt;dd&gt;Scroll all the way down&lt;/dd&gt;
-        &lt;/dl&gt;
-      &lt;/div&gt;&lt;!-- /.column.last --&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-
-  &lt;div style='display:none'&gt;
-    &lt;div class=&quot;rule&quot;&gt;&lt;/div&gt;
-    &lt;div class=&quot;columns threecols&quot;&gt;
-      &lt;div class=&quot;column first&quot; style='display:none'&gt;
-        &lt;h3&gt;Source Code Browsing&lt;/h3&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;t&lt;/dt&gt;
-          &lt;dd&gt;Activates the file finder&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;l&lt;/dt&gt;
-          &lt;dd&gt;Jump to line&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;w&lt;/dt&gt;
-          &lt;dd&gt;Switch branch/tag&lt;/dd&gt;
-        &lt;/dl&gt;
-        &lt;dl class=&quot;keyboard-mappings&quot;&gt;
-          &lt;dt&gt;y&lt;/dt&gt;
-          &lt;dd&gt;Expand URL to its canonical form&lt;/dd&gt;
-        &lt;/dl&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-    &lt;div id=&quot;markdown-help&quot; class=&quot;instapaper_ignore readability-extra&quot;&gt;
-  &lt;h2&gt;Markdown Cheat Sheet&lt;/h2&gt;
-
-  &lt;div class=&quot;cheatsheet-content&quot;&gt;
-
-  &lt;div class=&quot;mod&quot;&gt;
-    &lt;div class=&quot;col&quot;&gt;
-      &lt;h3&gt;Format Text&lt;/h3&gt;
-      &lt;p&gt;Headers&lt;/p&gt;
-      &lt;pre&gt;
-# This is an &amp;lt;h1&amp;gt; tag
-## This is an &amp;lt;h2&amp;gt; tag
-###### This is an &amp;lt;h6&amp;gt; tag&lt;/pre&gt;
-     &lt;p&gt;Text styles&lt;/p&gt;
-     &lt;pre&gt;
-*This text will be italic*
-_This will also be italic_
-**This text will be bold**
-__This will also be bold__
-
-*You **can** combine them*
-&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;col&quot;&gt;
-      &lt;h3&gt;Lists&lt;/h3&gt;
-      &lt;p&gt;Unordered&lt;/p&gt;
-      &lt;pre&gt;
-* Item 1
-* Item 2
-  * Item 2a
-  * Item 2b&lt;/pre&gt;
-     &lt;p&gt;Ordered&lt;/p&gt;
-     &lt;pre&gt;
-1. Item 1
-2. Item 2
-3. Item 3
-   * Item 3a
-   * Item 3b&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;col&quot;&gt;
-      &lt;h3&gt;Miscellaneous&lt;/h3&gt;
-      &lt;p&gt;Images&lt;/p&gt;
-      &lt;pre&gt;
-![GitHub Logo](/images/logo.png)
-Format: ![Alt Text](url)
-&lt;/pre&gt;
-     &lt;p&gt;Links&lt;/p&gt;
-     &lt;pre&gt;
-http://github.com - automatic!
-[GitHub](http://github.com)&lt;/pre&gt;
-&lt;p&gt;Blockquotes&lt;/p&gt;
-     &lt;pre&gt;
-As Kanye West said:
-
-&gt; We're living the future so
-&gt; the present is our past.
-&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;rule&quot;&gt;&lt;/div&gt;
-
-  &lt;h3&gt;Code Examples in Markdown&lt;/h3&gt;
-  &lt;div class=&quot;col&quot;&gt;
-      &lt;p&gt;Syntax highlighting with &lt;a href=&quot;http://github.github.com/github-flavored-markdown/&quot; title=&quot;GitHub Flavored Markdown&quot; target=&quot;_blank&quot;&gt;GFM&lt;/a&gt;&lt;/p&gt;
-      &lt;pre&gt;
-```javascript
-function fancyAlert(arg) {
-  if(arg) {
-    $.facebox({div:'#foo'})
-  }
-}
-```&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;col&quot;&gt;
-      &lt;p&gt;Or, indent your code 4 spaces&lt;/p&gt;
-      &lt;pre&gt;
-Here is a Python code example
-without syntax highlighting:
-
-    def foo:
-      if not bar:
-        return true&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;col&quot;&gt;
-      &lt;p&gt;Inline code for comments&lt;/p&gt;
-      &lt;pre&gt;
-I think you should use an
-`&amp;lt;addr&amp;gt;` element here instead.&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-
-  &lt;/div&gt;
-&lt;/div&gt;
-
-
-    &lt;div class=&quot;ajax-error-message&quot;&gt;
-      &lt;p&gt;&lt;span class=&quot;icon&quot;&gt;&lt;/span&gt; Something went wrong with that request. Please try again. &lt;a href=&quot;javascript:;&quot; class=&quot;ajax-error-dismiss&quot;&gt;Dismiss&lt;/a&gt;&lt;/p&gt;
-    &lt;/div&gt;
-
-    
-    
-    
-    &lt;span id='server_response_time' data-time='0.02912' data-host='fe6'&gt;&lt;/span&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</code></pre></noscript></div>
-
-
-<p>The evaluator sees the XPath expression above and uses index lookup&#8217;s to match some sequence of fragments in the database. xdmp:estimate() gives an estimate of the number of documents in a sequence and is directed at the index-lookup phase, i.e &#8220;search&#8221;.</p>
+<p>The evaluator sees the XPath expression above and uses index lookup&rsquo;s to match some sequence of fragments in the database. xdmp:estimate() gives an estimate of the number of documents in a sequence and is directed at the index-lookup phase, i.e &ldquo;search&rdquo;.</p>
 
 <div><script src='https://gist.github.com/1810958.js?file=result_of_xdmp_estimate.xml'></script>
 <noscript><pre><code>&lt;v:results v:warning=&quot;non-element item&quot;&gt;43762&lt;/v:results&gt;</code></pre></noscript></div>
 
 
-<p>Next, the evaluator will fetch those matching fragment(s), if any, from the database. Now we are back in the evaluation phase. It will check to make sure the nodes really match: this is known as &#8220;filtering&#8221;. Then it will evaluate the entire XPath.</p>
+<p>Next, the evaluator will fetch those matching fragment(s), if any, from the database. Now we are back in the evaluation phase. It will check to make sure the nodes really match: this is known as &ldquo;filtering&rdquo;. Then it will evaluate the entire XPath.</p>
 
 <p>So what we are saying for the xquery above is that the number of matching fragments is all the documents in the database which will then get filtered so we are not making use of any of available Mark Logic indexing which means the query is very inefficient.</p>
 
@@ -734,7 +170,7 @@ I think you should use an
 
 <div><script src='https://gist.github.com/1810958.js?file=document_by_url_with_xdmp_plan.xqy'></script>
 <noscript><pre><code>return xdmp:plan(/*[
-    /*/itemMeta/bbc:url[@href=$public_url]
+    /*/itemMeta/url[@href=$public_url]
     ])</code></pre></noscript></div>
 
 
@@ -743,9 +179,9 @@ I think you should use an
 <div><script src='https://gist.github.com/1810958.js?file=result_of_xdmp_plan.xml'></script>
 <noscript><pre><code>&lt;qry:query-plan xmlns:qry=&quot;http://marklogic.com/cts/query&quot;&gt;
   &lt;qry:info-trace&gt;xdmp:eval(&quot;xquery version &amp;amp;quot;1.0-ml&amp;amp;quot;;&amp;amp;#13;&amp;amp;#10;import module namesp...&quot;, (), &amp;lt;options xmlns=&quot;xdmp:eval&quot;&amp;gt;&amp;lt;database&amp;gt;14032772107247300631&amp;lt;/database&amp;gt;&amp;lt;modules&amp;gt;77217792867070...&amp;lt;/options&amp;gt;)&lt;/qry:info-trace&gt;
-  &lt;qry:info-trace&gt;Analyzing path: fn:collection()/bbc:*[/bbc:*/bbc:itemMeta/bbc:url[@href = &quot;/news/technology&quot;]]&lt;/qry:info-trace&gt;
+  &lt;qry:info-trace&gt;Analyzing path: fn:collection()/*[/*/itemMeta/url[@href = &quot;/news/technology&quot;]]&lt;/qry:info-trace&gt;
   &lt;qry:info-trace&gt;Step 1 is searchable: fn:collection()&lt;/qry:info-trace&gt;
-  &lt;qry:info-trace&gt;Step 2 is searchable: bbc:*[/bbc:*/bbc:itemMeta/bbc:url[@href = &quot;/news/technology&quot;]]&lt;/qry:info-trace&gt;
+  &lt;qry:info-trace&gt;Step 2 is searchable: *[/*/itemMeta/url[@href = &quot;/news/technology&quot;]]&lt;/qry:info-trace&gt;
   &lt;qry:info-trace&gt;Path is fully searchable.&lt;/qry:info-trace&gt;
   &lt;qry:info-trace&gt;Gathering constraints.&lt;/qry:info-trace&gt;
   &lt;qry:info-trace&gt;Executing search.&lt;/qry:info-trace&gt;
@@ -777,7 +213,7 @@ I think you should use an
 <div><script src='https://gist.github.com/1810958.js?file=result_document_by_url_tuned.xml'></script>
 <noscript><pre><code>&lt;qm:elapsed-time&gt;PT0.000773S&lt;/qm:elapsed-time&gt;
 &lt;v:results v:warning=&quot;non-element item&quot;&gt;1&lt;/v:results&gt;
-&lt;qry:info-trace&gt;Step 1 predicate 1 contributed 3 constraints: bbc:*/bbc:itemMeta/bbc:url/@href eq &quot;/news/technology&quot;&lt;/qry:info-trace&gt;</code></pre></noscript></div>
+&lt;qry:info-trace&gt;Step 1 predicate 1 contributed 3 constraints: */itemMeta/url/@href eq &quot;/news/technology&quot;&lt;/qry:info-trace&gt;</code></pre></noscript></div>
 
 
 <h3>Plugging in xinc:node-expand</h3>
@@ -790,19 +226,19 @@ I think you should use an
 
 <h4>Running the original query using xinc:node-expand</h4>
 
-<p><strong>Not cached - 6 seconds!!</strong></p>
+<p><strong>Not cached &ndash; 6 seconds!!</strong></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;qm:elapsed-time&gt;PT6.05373S&lt;/qm:elapsed-time&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>Cached - 2 seconds</strong></p>
+<p><strong>Cached &ndash; 2 seconds</strong></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;qm:elapsed-time&gt;PT2.154288S&lt;/qm:elapsed-time&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>With our new optimised query we can see the time is much reduced below. This is a Mark Logic extension so we can&#8217;t really do much about the performance of this. However it is interesting to see how much additional time this adds to the processing even for a fully optimised query.</p>
+<p>With our new optimised query we can see the time is much reduced below. This is a Mark Logic extension so we can&rsquo;t really do much about the performance of this. However it is interesting to see how much additional time this adds to the processing even for a fully optimised query.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;qm:elapsed-time&gt;PT0.351562S&lt;/qm:elapsed-time&gt;</span></code></pre></td></tr></table></div></figure>
@@ -812,7 +248,7 @@ I think you should use an
 
 <h4>Conclusion</h4>
 
-<p>Even what is deemed to be the simplest of xquery/xpath expressions might be inefficient. Mark Logic won&#8217;t tell you how to fix your xquery/xpath but it will provide insight into whether your query is utilizing indexes and how it is actually running.</p>
+<p>Even what is deemed to be the simplest of xquery/xpath expressions might be inefficient. Mark Logic won&rsquo;t tell you how to fix your xquery/xpath but it will provide insight into whether your query is utilizing indexes and how it is actually running.</p>
 
 <h4>Useful Links</h4>
 
@@ -847,7 +283,7 @@ I think you should use an
   
 
 
-<time datetime="2012-02-12T19:36:00+00:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
+<time datetime="2012-02-12T19:36:00+01:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
       
 
 <span class="categories">
@@ -861,7 +297,7 @@ I think you should use an
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://JonCook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance/" data-via="CookyBear" data-counturl="http://JonCook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://JonCook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance/" data-via="CookyBear" data-counturl="http://JonCook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance/" >Tweet</a>
   
   
   
@@ -873,7 +309,7 @@ I think you should use an
     <p class="meta">
       
       
-        <a class="basic-alignment right" href="/blog/2012/03/15/useful-xquery/" title="next Post: Useful XQuery">Useful XQuery &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2012/03/15/useful-xquery/" title="Next Post: Useful XQuery">Useful XQuery &raquo;</a>
       
     </p>
   </footer>
@@ -894,11 +330,15 @@ I think you should use an
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/04/30/some-bash-fu-with-curl/">Some Bash Fu with Curl, Grep, Awk and Pipes</a>
+        <a href="/blog/2013/10/13/unit-testing-javascript-with-mocha-phantomjs/">Unit Testing Javascript With Mocha Phantomjs</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/04/07/creating-a-http-response-version-provider-with-apache-cxf-filters/">Creating a HTTP Response Version Provider with Apache CXF Filters</a>
+        <a href="/blog/2012/04/30/some-bash-fu-with-curl/">Some Bash Fu With Curl, Grep, Awk and Pipes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/07/creating-a-http-response-version-provider-with-apache-cxf-filters/">Creating a HTTP Response Version Provider With Apache CXF Filters</a>
       </li>
     
       <li class="post">
@@ -913,15 +353,15 @@ I think you should use an
 </section>
 
 <section>
-  <h1>Github Repos</h1>
+  <h1>GitHub Repos</h1>
   <ul id="gh_repos">
     <li class="loading">Status updating...</li>
   </ul>
   
-  <a href="https://github.com/JonCook">@JonCook</a> on Github
+  <a href="https://github.com/JonCook">@JonCook</a> on GitHub
   
   <script type="text/javascript">
-    $.domReady(function(){
+    $(document).ready(function(){
         if (!window.jXHR){
             var jxhr = document.createElement('script');
             jxhr.type = 'text/javascript';
@@ -942,23 +382,6 @@ I think you should use an
 </section>
 
 
-<section>
-  <h1>Latest Tweets</h1>
-  <ul id="tweets">
-    <li class="loading">Status updating...</li>
-  </ul>
-  <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("CookyBear", 3, false);
-    });
-  </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
-  
-    <a href="http://twitter.com/CookyBear" class="twitter-follow-button" data-show-count="false">Follow @CookyBear</a>
-  
-</section>
-
-
 
 
 
@@ -969,7 +392,7 @@ I think you should use an
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Jon Cook -
+  Copyright &copy; 2013 - Jon Cook -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
@@ -987,7 +410,7 @@ I think you should use an
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     }());
 </script>
@@ -998,7 +421,7 @@ I think you should use an
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
+  js = d.createElement(s); js.id = id; js.async = true;
   js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
@@ -1012,7 +435,7 @@ I think you should use an
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>

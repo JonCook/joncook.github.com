@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Shell, | Jon's Blog]]></title>
-  <link href="http://JonCook.github.com/blog/categories/shell-/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Bash, | Jon's Blog]]></title>
+  <link href="http://JonCook.github.com/blog/categories/bash/atom.xml" rel="self"/>
   <link href="http://JonCook.github.com/"/>
-  <updated>2012-04-30T02:10:52+01:00</updated>
+  <updated>2013-10-13T23:01:15+02:00</updated>
   <id>http://JonCook.github.com/</id>
   <author>
     <name><![CDATA[Jon Cook]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Some Bash Fu with Curl, Grep, Awk and Pipes]]></title>
     <link href="http://JonCook.github.com/blog/2012/04/30/some-bash-fu-with-curl/"/>
-    <updated>2012-04-30T01:15:00+01:00</updated>
+    <updated>2012-04-30T01:15:00+02:00</updated>
     <id>http://JonCook.github.com/blog/2012/04/30/some-bash-fu-with-curl</id>
     <content type="html"><![CDATA[<p>I wanted to test out the HTTP response codes from a number of our API endpoints. There is numerous ways to approach this but I thought it would be fun to use the command line and it turned out pretty straight forward.</p>
 
@@ -50,7 +50,7 @@ http://www.arsenal.com=http-302
 grep "$1" urls.txt | awk '{print "curl --cert /etc/pki/my-pem.pem --cacert /etc/my-ca.pem -H \"Accept:application/json\" -H \"X-Candy-Audience:Domestic\" -H \"X-Candy-Platform:HighWeb\" --write-out "$0"=http-%{http_code}\"\n\" --silent --output /dev/null "$0'} | sh &gt;&gt; responses.txt
 </code></p>
 
-<p>I'm not suggesting this is the best way to do this but nice not to need any frameworks or libraries. If I want to do this more regularly I will probably use a cucumber feature and setup a job in our CI environment not, forgetting a nice looking report but for now this is fine.</p>
+<p>I&rsquo;m not suggesting this is the best way to do this but nice not to need any frameworks or libraries. If I want to do this more regularly I will probably use a cucumber feature and setup a job in our CI environment not, forgetting a nice looking report but for now this is fine.</p>
 ]]></content>
   </entry>
   

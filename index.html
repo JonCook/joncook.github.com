@@ -9,7 +9,8 @@
   <meta name="author" content="Jon Cook">
 
   
-  <meta name="description" content="I wanted to test out the HTTP response codes from a number of our API endpoints. There is numerous ways to approach this but I thought it would be &hellip;">
+  <meta name="description" content="Just a little test, to be continued
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,10 +22,11 @@
   <link rel="canonical" href="http://JonCook.github.com">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Jon's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -70,6 +72,42 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/10/13/unit-testing-javascript-with-mocha-phantomjs/">Unit Testing Javascript With Mocha Phantomjs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-13T22:16:00+02:00" pubdate data-updated="true">Oct 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just a little test, to be continued</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/04/30/some-bash-fu-with-curl/">Some Bash Fu With Curl, Grep, Awk and Pipes</a></h1>
     
     
@@ -86,7 +124,7 @@
   
 
 
-<time datetime="2012-04-30T01:15:00+01:00" pubdate data-updated="true">Apr 30<span>th</span>, 2012</time>
+<time datetime="2012-04-30T01:15:00+02:00" pubdate data-updated="true">Apr 30<span>th</span>, 2012</time>
         
       </p>
     
@@ -135,7 +173,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>grep "$1" urls.txt | awk '{print "curl --cert /etc/pki/my-pem.pem --cacert /etc/my-ca.pem -H \"Accept:application/json\" -H \"X-Candy-Audience:Domestic\" -H \"X-Candy-Platform:HighWeb\" --write-out "$0"=http-%{http_code}\"\n\" --silent --output /dev/null "$0'} | sh &gt;&gt; responses.txt</span></code></pre></td></tr></table></div></figure>
 
 
-<p>I&#8217;m not suggesting this is the best way to do this but nice not to need any frameworks or libraries. If I want to do this more regularly I will probably use a cucumber feature and setup a job in our CI environment not, forgetting a nice looking report but for now this is fine.</p>
+<p>I&rsquo;m not suggesting this is the best way to do this but nice not to need any frameworks or libraries. If I want to do this more regularly I will probably use a cucumber feature and setup a job in our CI environment not, forgetting a nice looking report but for now this is fine.</p>
 </div>
   
   
@@ -164,16 +202,16 @@
   
 
 
-<time datetime="2012-04-07T22:16:00+01:00" pubdate data-updated="true">Apr 7<span>th</span>, 2012</time>
+<time datetime="2012-04-07T22:16:00+02:00" pubdate data-updated="true">Apr 7<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>I&#8217;ve been using <a href="http://cxf.apache.org/">Apache CXF</a> which has some nice support for building JSR-311 compliant JAX-RS Services and recently had a requirement for sending back a custom version header as part of our API Responses.</p>
+  <div class="entry-content"><p>I&rsquo;ve been using <a href="http://cxf.apache.org/">Apache CXF</a> which has some nice support for building JSR-311 compliant JAX-RS Services and recently had a requirement for sending back a custom version header as part of our API Responses.</p>
 
-<p>It is generally accepted that versioning APIs is a good thing and adopting the general contract of Major.Minor.Patch covers our needs, now we need to have a standard method of reporting and documenting the APIs and versions. Before we get into the ins and outs of how one you should version an API, we have a company wide recommendation of adding a custom response header to each response <strong>X-API-Version: d.d.d</strong> which I have to say I&#8217;m in favour of over embedding the version in the url and is also the method adopted by Sun’s Cloud API - which certainly was commonly held to be a benchmark implementation of REST.</p>
+<p>It is generally accepted that versioning APIs is a good thing and adopting the general contract of Major.Minor.Patch covers our needs, now we need to have a standard method of reporting and documenting the APIs and versions. Before we get into the ins and outs of how one you should version an API, we have a company wide recommendation of adding a custom response header to each response <strong>X-API-Version: d.d.d</strong> which I have to say I&rsquo;m in favour of over embedding the version in the url and is also the method adopted by Sun’s Cloud API &ndash; which certainly was commonly held to be a benchmark implementation of REST.</p>
 
 <p>Using <a href="http://cxf.apache.org/docs/jax-rs-filters.html">Apache CXF Filters</a> led to this fairly elegant and simple solution which could be applied to add any type of additional headers but I found the documentation a little confusing so decided to write a post on it.</p>
 
@@ -209,14 +247,14 @@
   
 
 
-<time datetime="2012-03-15T13:58:00+00:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
+<time datetime="2012-03-15T13:58:00+01:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>As I mentioned in my previous <a href="http://joncook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">blog post</a> I&#8217;ve recently been doing some work building RESTFul API&#8217;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval which has led me come up with the following useful snippets of XQuery that I thought I would share. They could easily be altered to work with slightly different requirements.</p>
+  <div class="entry-content"><p>As I mentioned in my previous <a href="http://joncook.github.com/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">blog post</a> I&rsquo;ve recently been doing some work building RESTFul API&rsquo;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval which has led me come up with the following useful snippets of XQuery that I thought I would share. They could easily be altered to work with slightly different requirements.</p>
 
 <h3>List all the document uris in database</h3>
 
@@ -322,14 +360,14 @@ return xinc:node-expand($asset[1])</code></pre></noscript></div>
   
 
 
-<time datetime="2012-02-12T19:36:00+00:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
+<time datetime="2012-02-12T19:36:00+01:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>I&#8217;ve recently been doing some work building RESTFul API&#8217;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval. This post details the steps involved in tuning what was deemed to be the most simplest of queries for optimum performance using some useful Mark Logic extensions for profiling.</p>
+  <div class="entry-content"><p>I&rsquo;ve recently been doing some work building RESTFul API&rsquo;s backed by a Mark Logic XML Content Store utilising XQuery for document retrieval. This post details the steps involved in tuning what was deemed to be the most simplest of queries for optimum performance using some useful Mark Logic extensions for profiling.</p>
 
 <h3>Original Query</h3>
 
@@ -377,7 +415,7 @@ xdmp:query-meters()</code></pre></noscript></div>
 &lt;qm:documents&gt;</code></pre></noscript></div>
 
 
-<p>Immediately something looks a bit suspicious as all the documents in the database are being returned which would indicate that the query is not making effective use of Mark Logic&#8217;s Indexes.</p>
+<p>Immediately something looks a bit suspicious as all the documents in the database are being returned which would indicate that the query is not making effective use of Mark Logic&rsquo;s Indexes.</p>
 
 </div>
   
@@ -403,11 +441,15 @@ xdmp:query-meters()</code></pre></noscript></div>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/04/30/some-bash-fu-with-curl/">Some Bash Fu with Curl, Grep, Awk and Pipes</a>
+        <a href="/blog/2013/10/13/unit-testing-javascript-with-mocha-phantomjs/">Unit Testing Javascript With Mocha Phantomjs</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/04/07/creating-a-http-response-version-provider-with-apache-cxf-filters/">Creating a HTTP Response Version Provider with Apache CXF Filters</a>
+        <a href="/blog/2012/04/30/some-bash-fu-with-curl/">Some Bash Fu With Curl, Grep, Awk and Pipes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/07/creating-a-http-response-version-provider-with-apache-cxf-filters/">Creating a HTTP Response Version Provider With Apache CXF Filters</a>
       </li>
     
       <li class="post">
@@ -422,15 +464,15 @@ xdmp:query-meters()</code></pre></noscript></div>
 </section>
 
 <section>
-  <h1>Github Repos</h1>
+  <h1>GitHub Repos</h1>
   <ul id="gh_repos">
     <li class="loading">Status updating&#8230;</li>
   </ul>
   
-  <a href="https://github.com/JonCook">@JonCook</a> on Github
+  <a href="https://github.com/JonCook">@JonCook</a> on GitHub
   
   <script type="text/javascript">
-    $.domReady(function(){
+    $(document).ready(function(){
         if (!window.jXHR){
             var jxhr = document.createElement('script');
             jxhr.type = 'text/javascript';
@@ -451,23 +493,6 @@ xdmp:query-meters()</code></pre></noscript></div>
 </section>
 
 
-<section>
-  <h1>Latest Tweets</h1>
-  <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
-  </ul>
-  <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("CookyBear", 3, false);
-    });
-  </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
-  
-    <a href="http://twitter.com/CookyBear" class="twitter-follow-button" data-show-count="false">Follow @CookyBear</a>
-  
-</section>
-
-
 
 
 
@@ -477,7 +502,7 @@ xdmp:query-meters()</code></pre></noscript></div>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Jon Cook -
+  Copyright &copy; 2013 - Jon Cook -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
@@ -492,7 +517,7 @@ xdmp:query-meters()</code></pre></noscript></div>
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     }());
 </script>
@@ -503,7 +528,7 @@ xdmp:query-meters()</code></pre></noscript></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
+  js = d.createElement(s); js.id = id; js.async = true;
   js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
@@ -517,7 +542,7 @@ xdmp:query-meters()</code></pre></noscript></div>
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
