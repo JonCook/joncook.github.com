@@ -1,0 +1,559 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>XML Processing with Scala - Jon's Blog</title>
+  <meta name="author" content="Jon Cook">
+
+  
+  <meta name="description" content="Given scala&rsquo;s built-in support for XML and its more concise syntax for dealing with iterables and collections I was interested to see what some &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://JonCook.github.com/blog/2013/11/03/xml-processing-with-scala">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jon's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jon's Blog</a></h1>
+  
+    <h2>Coder for ODIGEO, Ex BBC. Cycling obsessive and writer for cyclosport.org</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:JonCook.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">XML Processing With Scala</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-03T08:33:00+01:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Given scala&rsquo;s built-in support for XML and its more concise syntax for dealing with iterables and collections I was interested to see what some of our java xml parsing code written using Dom4j could look like in the Scala world.</p>
+
+<h3>Background</h3>
+
+<p>A bit of brief background, the idea is we have a number of assets, an asset representing for example a story, index page, picture gallery, page with media. Each Asset has it&rsquo;s own xml representation and is constructed using common snippets such as item-meta, page-options, media etc. See story.xml.</p>
+
+<p>Our requirement, is to take this xml which is our own internal representation which we use to repesent assets in our content store and essentially transform this into our object model and serve this up as json or xml. You may ask why but isolating our internal format means we are free to change this without effecting the external representations of our assets and it also means we can customise the output and the format of the output easily.</p>
+
+<p>Xml processing in java is typically done in sax or dom using a library like dom4J, we opted for the readability and ease of use the Dom over SAX and used something loosely based on the Strategy design pattern where we have a ParserFactory, this allocates the correct type of asset parser based on the type of asset parses the xml and creates our java object model. Xml and Json generation is handled by jaxb and jackson.</p>
+
+<!-- more -->
+
+
+<h3>POJO&rsquo;s</h3>
+
+<p>The recommendation looking at the scala documentation is to implement a toXML method and a corresponding fromXML method from within side a
+companion object which takes care of creating said object. e.g) A Story POJO which extends an Asset class.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Story(itemMeta: ItemMeta, pageOptions: PageOptions, byline: Byline, 
+</span><span class='line'>body: scala.xml.NodeSeq, media: Media, relatedGroups: RelatedGroups) 
+</span><span class='line'>extends Asset(itemMeta, pageOptions) { 
+</span><span class='line'>
+</span><span class='line'>override def toXML = 
+</span><span class='line'>   &lt;result&gt; 
+</span><span class='line'>     {super.toXML.child} 
+</span><span class='line'>     {byline.toXML} 
+</span><span class='line'>     {body} 
+</span><span class='line'>     {media.toXML} 
+</span><span class='line'>     {relatedGroups.toXML} 
+</span><span class='line'>   &lt;/result&gt; 
+</span><span class='line'>} 
+</span><span class='line'>
+</span><span class='line'>object Story { 
+</span><span class='line'>   def fromXML(node: scala.xml.NodeSeq): Story = 
+</span><span class='line'>     new Story( 
+</span><span class='line'>         ItemMeta.fromXML((node \ "itemMeta")), 
+</span><span class='line'>         PageOptions.fromXML((node \ "pageOptions")), 
+</span><span class='line'>         Byline.fromXML((node \ "byline")), 
+</span><span class='line'>         (node \ "body"), 
+</span><span class='line'>         Media.fromXML((node \ "media")), 
+</span><span class='line'>         RelatedGroups.fromXML(node \ "relatedGroups")) 
+</span><span class='line'>} </span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<h3>Parsing and iterating over elements</h3>
+
+<p>Parsing and iterating over elements is much neater and concise than the java equivalent e.g) A byline is made up a name, a title and a list of
+Person objects.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>case class Byline(val name: String, val title: String, val persons: 
+</span><span class='line'>List[Person]) { 
+</span><span class='line'>
+</span><span class='line'>   def toXML = 
+</span><span class='line'>     &lt;byline name={ name } title={ title }&gt;{ 
+</span><span class='line'>         if (!persons.isEmpty) 
+</span><span class='line'>           &lt;persons&gt;{ 
+</span><span class='line'>             for (person &lt;- persons) yield person.toXML 
+</span><span class='line'>           }&lt;/persons&gt;} 
+</span><span class='line'>     &lt;/byline&gt; 
+</span><span class='line'>
+</span><span class='line'>} 
+</span><span class='line'>
+</span><span class='line'>object Byline { 
+</span><span class='line'>   def fromXML(node: scala.xml.NodeSeq): Byline = 
+</span><span class='line'>     new Byline( 
+</span><span class='line'>       name = (node \ "@name").text, 
+</span><span class='line'>       title = (node \ "@title").text, 
+</span><span class='line'>       List[Person]((node \ "person").toList map { s =&gt; Person.fromXML(s) 
+</span><span class='line'>}: _*)) 
+</span><span class='line'>
+</span><span class='line'>} </span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>In my opinion this is where you start to see the real power of Scala by calling .toList on the sequence of person nodes you can then map this to a list of people. Person will have its own corresponding toXML implementation as well. We remove those horrible null checks and cumbersom for loops and my favourite removing all the static xPath constants. No need to worry about name spaces either.</p>
+
+<p>The equivalent in java for parsing the byline and person elements which doesn&rsquo;t include the pojo for byline either. Much more cumbersom and messy and you&rsquo;ve got no feel for what the corresponding structure of the xml will look like when we deserialize a byline.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public Byline parseByline(Element bylineElement) { 
+</span><span class='line'>    Byline byline = null; 
+</span><span class='line'>    if (bylineElement != null) { 
+</span><span class='line'>        byline = new Byline(); 
+</span><span class='line'>        byline.setName(bylineElement.attributeValue("name")); 
+</span><span class='line'>        byline.setTitle(bylineElement.attributeValue("title")); 
+</span><span class='line'>
+</span><span class='line'>        List&lt;Element&gt; persons =  BYLINE_PERSON_XPATH_SELECTOR.selectNodes(bylineElement); 
+</span><span class='line'>        for (Element element : persons) { 
+</span><span class='line'>           Person person = parsePerson(element); 
+</span><span class='line'>           byline.getPersons().add(person); 
+</span><span class='line'>        } 
+</span><span class='line'>    } 
+</span><span class='line'>    return byline; 
+</span><span class='line'>} 
+</span><span class='line'>
+</span><span class='line'>private Person parsePerson(Element element) { 
+</span><span class='line'>    Person person = new Person(); 
+</span><span class='line'>    person.setThumbnail(getAbsoluteImageHref(element.attributeValue("thumbnail"))); 
+</span><span class='line'>    person.setFunction(BYLINE_PERSON_FUNCTION_XPATH_SELECTOR.valueOf(element)); 
+</span><span class='line'>
+</span><span class='line'>    person.setName(BYLINE_PERSON_NAME_XPATH_SELECTOR.valueOf(element)); 
+</span><span class='line'>    return person; 
+</span><span class='line'>} 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<h3>Plugging it together Using scala&rsquo;s XML Pattern Matching</h3>
+
+<p>We are able to eliminate the existing ParserFactory class and have an AssetFactory which allocates the right type of Asset e.g)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>object AssetFactory { 
+</span><span class='line'>
+</span><span class='line'>   def factory(node: scala.xml.Node): Asset = { 
+</span><span class='line'>     val trimmedNode = scala.xml.Utility.trim(node) 
+</span><span class='line'>
+</span><span class='line'>     trimmedNode match { 
+</span><span class='line'>       case &lt;story&gt;{children @ _*}&lt;/story&gt; =&gt; Story.fromXML(trimmedNode) 
+</span><span class='line'>     } 
+</span><span class='line'>
+</span><span class='line'>   } 
+</span><span class='line'>
+</span><span class='line'>} </span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<h3>Testability</h3>
+
+<p>I think the code is more testable now as well. I prefer the readability of these type of tests using something like ScalaTest. I created my own convenience trait XmlDataSpec which is essentially a way to minimise the number of mixins used in our tests. FixtureTestUtils gives us a way to load in xml fixtures. You can load in snippets from file or inline the xml element you wish to test and it all just seems more natural, readable and less verbose than the java equivalent. e.g)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@RunWith(classOf[JUnitRunner])
+</span><span class='line'>class BylineSpec extends XmlDataSpec {
+</span><span class='line'>
+</span><span class='line'>  describe("A Byline with a list of authors") {
+</span><span class='line'>    val byline = Byline.fromXML(xmlFixture("/xml/byline.xml"))
+</span><span class='line'>
+</span><span class='line'>    it("should have name and title") {
+</span><span class='line'>      assert(byline.name === "By AJP Taylor & Adam Brookes & Alan Hansen")
+</span><span class='line'>      assert(byline.title === "Historian")
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    it("should contain a list of people") {
+</span><span class='line'>      byline.persons must have length (3)
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>What I like (lots!)</h3>
+
+<ul>
+<li>No need for separate parser classes which contain huge amounts of static constants declaring xpath snippets.</li>
+<li>You can see in one place the xml representation of the class and also the parsing code to create the object.</li>
+<li>It is easy to see what for example a Story is made up of, in this case, itemMeta, PageOptions, Byline, Media and Related Groups</li>
+<li>Nulls are taken care of and iterating over nodes is much neater.</li>
+<li>Generating xml doesn&rsquo;t require any frameworks, I&rsquo;ve been frustrated by the inflexibility of jax-b particularly around handling empty elements and
+also having to define lots of custom adapters which are a disaster, not to mention ending up with lots of annotations in your pojos.</li>
+</ul>
+
+
+<h3>Improvements</h3>
+
+<ul>
+<li><p>I think there is probably a nicer way to handle conditional elements using None and Some  <code>{if (!title.isEmpty) &lt;title&gt;{title}&lt;/title&gt;}</code></p></li>
+<li><p>Inline xml in pojos is ok for small snippets but I could see this becoming messy if care wasn&rsquo;t taken</p></li>
+</ul>
+
+
+<h3>The code</h3>
+
+<p>I&rsquo;ve put the sample code on github, here. You&rsquo;ll need SBT installed and once you have checked it out simple run sbt test to see the unit tests. In addition to this Main.sala is a simple test harness for processing a story. Please remember I&rsquo;m not a scala expert, I&rsquo;m pretty sure there is a way to improve the double .toList calls in Media.scala using zip and also some people may suggest that some of the functions inside .toList aren&rsquo;t readable but once you join the Scala world you will see they pretty clear.</p>
+
+<h3>Conclusion</h3>
+
+<p>I&rsquo;ve seen a lot of complaints about the current implementation of scala.xml but for simple xml representations and parsing I think it works really well and is much more readible than the java equivalent. The performance is equal if not better than dom4j</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jon Cook</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-03T08:33:00+01:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/functional/'>Functional</a>, <a class='category' href='/blog/categories/scala/'>Scala</a>, <a class='category' href='/blog/categories/xml/'>XML</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://JonCook.github.com/blog/2013/11/03/xml-processing-with-scala/" data-via="CookyBear" data-counturl="http://JonCook.github.com/blog/2013/11/03/xml-processing-with-scala/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/30/some-bash-fu-with-curl/" title="Previous Post: Some Bash Fu with Curl, Grep, Awk and Pipes">&laquo; Some Bash Fu with Curl, Grep, Awk and Pipes</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/03/xml-processing-with-scala/">XML Processing With Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/30/some-bash-fu-with-curl/">Some Bash Fu With Curl, Grep, Awk and Pipes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/07/creating-a-http-response-version-provider-with-apache-cxf-filters/">Creating a HTTP Response Version Provider With Apache CXF Filters</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/15/useful-xquery/">Useful XQuery</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/02/12/evaluating-mark-logic-xquery-performance/">Evaluating Mark Logic XQuery Performance</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/JonCook">@JonCook</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'JonCook',
+            count: 2,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Jon Cook -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jonscodingblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://JonCook.github.com/blog/2013/11/03/xml-processing-with-scala/';
+        var disqus_url = 'http://JonCook.github.com/blog/2013/11/03/xml-processing-with-scala/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -9,8 +9,7 @@
   <meta name="author" content="Jon Cook">
 
   
-  <meta name="description" content="Just a little test, to be continued
-">
+  <meta name="description" content="Given scala&rsquo;s built-in support for XML and its more concise syntax for dealing with iterables and collections I was interested to see what some &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,7 +71,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/10/13/unit-testing-javascript-with-mocha-phantomjs/">Unit Testing Javascript With Mocha Phantomjs</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/11/03/xml-processing-with-scala/">XML Processing With Scala</a></h1>
     
     
       <p class="meta">
@@ -88,16 +87,29 @@
   
 
 
-<time datetime="2013-10-13T22:16:00+02:00" pubdate data-updated="true">Oct 13<span>th</span>, 2013</time>
+<time datetime="2013-11-03T08:33:00+01:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Just a little test, to be continued</p>
+  <div class="entry-content"><p>Given scala&rsquo;s built-in support for XML and its more concise syntax for dealing with iterables and collections I was interested to see what some of our java xml parsing code written using Dom4j could look like in the Scala world.</p>
+
+<h3>Background</h3>
+
+<p>A bit of brief background, the idea is we have a number of assets, an asset representing for example a story, index page, picture gallery, page with media. Each Asset has it&rsquo;s own xml representation and is constructed using common snippets such as item-meta, page-options, media etc. See story.xml.</p>
+
+<p>Our requirement, is to take this xml which is our own internal representation which we use to repesent assets in our content store and essentially transform this into our object model and serve this up as json or xml. You may ask why but isolating our internal format means we are free to change this without effecting the external representations of our assets and it also means we can customise the output and the format of the output easily.</p>
+
+<p>Xml processing in java is typically done in sax or dom using a library like dom4J, we opted for the readability and ease of use the Dom over SAX and used something loosely based on the Strategy design pattern where we have a ParserFactory, this allocates the correct type of asset parser based on the type of asset parses the xml and creates our java object model. Xml and Json generation is handled by jaxb and jackson.</p>
+
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/11/03/xml-processing-with-scala/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -441,7 +453,7 @@ xdmp:query-meters()</code></pre></noscript></div>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/13/unit-testing-javascript-with-mocha-phantomjs/">Unit Testing Javascript With Mocha Phantomjs</a>
+        <a href="/blog/2013/11/03/xml-processing-with-scala/">XML Processing With Scala</a>
       </li>
     
       <li class="post">
@@ -502,7 +514,7 @@ xdmp:query-meters()</code></pre></noscript></div>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Jon Cook -
+  Copyright &copy; 2014 - Jon Cook -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
