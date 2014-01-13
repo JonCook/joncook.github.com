@@ -38,7 +38,7 @@
   <header role="banner"><hgroup>
   <h1><a href="/">Jon's Blog</a></h1>
   
-    <h2>Coder for ODIGEO, Ex BBC. Cycling obsessive and writer for cyclosport.org</h2>
+    <h2>Coder, Ex BBC. Cycling obsessive and writer for cyclosport.org</h2>
   
 </hgroup>
 
@@ -133,33 +133,48 @@ companion object which takes care of creating said object. e.g) A Story POJO whi
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Story(itemMeta: ItemMeta, pageOptions: PageOptions, byline: Byline, 
-</span><span class='line'>body: scala.xml.NodeSeq, media: Media, relatedGroups: RelatedGroups) 
-</span><span class='line'>extends Asset(itemMeta, pageOptions) { 
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">package</span> <span class="nn">com.cookybear.content.asset</span>
 </span><span class='line'>
-</span><span class='line'>override def toXML = 
-</span><span class='line'>   &lt;result&gt; 
-</span><span class='line'>     {super.toXML.child} 
-</span><span class='line'>     {byline.toXML} 
-</span><span class='line'>     {body} 
-</span><span class='line'>     {media.toXML} 
-</span><span class='line'>     {relatedGroups.toXML} 
-</span><span class='line'>   &lt;/result&gt; 
-</span><span class='line'>} 
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.xml.NodeSeq</span>
 </span><span class='line'>
-</span><span class='line'>object Story { 
-</span><span class='line'>   def fromXML(node: scala.xml.NodeSeq): Story = 
-</span><span class='line'>     new Story( 
-</span><span class='line'>         ItemMeta.fromXML((node \ "itemMeta")), 
-</span><span class='line'>         PageOptions.fromXML((node \ "pageOptions")), 
-</span><span class='line'>         Byline.fromXML((node \ "byline")), 
-</span><span class='line'>         (node \ "body"), 
-</span><span class='line'>         Media.fromXML((node \ "media")), 
-</span><span class='line'>         RelatedGroups.fromXML(node \ "relatedGroups")) 
-</span><span class='line'>} </span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="k">class</span> <span class="nc">Story</span><span class="o">(</span>
+</span><span class='line'>  <span class="n">itemMeta</span><span class="k">:</span> <span class="kt">ItemMeta</span><span class="o">,</span>
+</span><span class='line'>  <span class="n">pageOptions</span><span class="k">:</span> <span class="kt">PageOptions</span><span class="o">,</span>
+</span><span class='line'>  <span class="n">byline</span><span class="k">:</span> <span class="kt">Byline</span><span class="o">,</span>
+</span><span class='line'>  <span class="n">body</span><span class="k">:</span> <span class="kt">NodeSeq</span><span class="o">,</span>
+</span><span class='line'>  <span class="n">media</span><span class="k">:</span> <span class="kt">Media</span><span class="o">,</span>
+</span><span class='line'>  <span class="n">relatedGroups</span><span class="k">:</span> <span class="kt">RelatedGroups</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Asset</span><span class="o">(</span><span class="n">itemMeta</span><span class="o">,</span> <span class="n">pageOptions</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">toXML</span> <span class="k">=</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">result</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="o">{</span> <span class="k">super</span><span class="o">.</span><span class="n">toXML</span><span class="o">.</span><span class="n">child</span> <span class="o">}</span>
+</span><span class='line'>      <span class="o">{</span> <span class="n">byline</span><span class="o">.</span><span class="n">toXML</span> <span class="o">}</span>
+</span><span class='line'>      <span class="o">{</span> <span class="n">body</span> <span class="o">}</span>
+</span><span class='line'>      <span class="o">{</span> <span class="n">media</span><span class="o">.</span><span class="n">toXML</span> <span class="o">}</span>
+</span><span class='line'>      <span class="o">{</span> <span class="n">relatedGroups</span><span class="o">.</span><span class="n">toXML</span> <span class="o">}</span>
+</span><span class='line'>    <span class="o">&lt;/</span><span class="n">result</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">Story</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">fromXML</span><span class="o">(</span><span class="n">node</span><span class="k">:</span> <span class="kt">scala.xml.NodeSeq</span><span class="o">)</span><span class="k">:</span> <span class="kt">Story</span> <span class="o">=</span>
+</span><span class='line'>    <span class="k">new</span> <span class="nc">Story</span><span class="o">(</span>
+</span><span class='line'>      <span class="nc">ItemMeta</span><span class="o">.</span><span class="n">fromXML</span><span class="o">((</span><span class="n">node</span> <span class="o">\</span> <span class="s">&quot;itemMeta&quot;</span><span class="o">)),</span>
+</span><span class='line'>      <span class="nc">PageOptions</span><span class="o">.</span><span class="n">fromXML</span><span class="o">((</span><span class="n">node</span> <span class="o">\</span> <span class="s">&quot;pageOptions&quot;</span><span class="o">)),</span>
+</span><span class='line'>      <span class="nc">Byline</span><span class="o">.</span><span class="n">fromXML</span><span class="o">((</span><span class="n">node</span> <span class="o">\</span> <span class="s">&quot;byline&quot;</span><span class="o">)),</span>
+</span><span class='line'>      <span class="o">(</span><span class="n">node</span> <span class="o">\</span> <span class="s">&quot;body&quot;</span><span class="o">),</span>
+</span><span class='line'>      <span class="nc">Media</span><span class="o">.</span><span class="n">fromXML</span><span class="o">((</span><span class="n">node</span> <span class="o">\</span> <span class="s">&quot;media&quot;</span><span class="o">)),</span>
+</span><span class='line'>      <span class="nc">RelatedGroups</span><span class="o">.</span><span class="n">fromXML</span><span class="o">(</span><span class="n">node</span> <span class="o">\</span> <span class="s">&quot;relatedGroups&quot;</span><span class="o">))</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-
-<p></p>
 
 <h3>Parsing and iterating over elements</h3>
 
@@ -188,31 +203,34 @@ Person objects.</p>
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>case class Byline(val name: String, val title: String, val persons: 
-</span><span class='line'>List[Person]) { 
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">package</span> <span class="nn">com.cookybear.content.asset</span>
 </span><span class='line'>
-</span><span class='line'>   def toXML = 
-</span><span class='line'>     &lt;byline name={ name } title={ title }&gt;{ 
-</span><span class='line'>         if (!persons.isEmpty) 
-</span><span class='line'>           &lt;persons&gt;{ 
-</span><span class='line'>             for (person &lt;- persons) yield person.toXML 
-</span><span class='line'>           }&lt;/persons&gt;} 
-</span><span class='line'>     &lt;/byline&gt; 
+</span><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">Byline</span><span class="o">(</span><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="n">title</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="n">persons</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Person</span><span class="o">])</span> <span class="o">{</span>
 </span><span class='line'>
-</span><span class='line'>} 
+</span><span class='line'>  <span class="k">def</span> <span class="n">toXML</span> <span class="k">=</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">byline</span> <span class="n">name</span><span class="o">={</span> <span class="n">name</span> <span class="o">}</span> <span class="n">title</span><span class="o">={</span> <span class="n">title</span> <span class="o">}&gt;</span>
+</span><span class='line'>      <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">persons</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span>
+</span><span class='line'>          <span class="o">&lt;</span><span class="n">persons</span><span class="o">&gt;{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="n">person</span> <span class="k">&lt;-</span> <span class="n">persons</span><span class="o">)</span> <span class="k">yield</span> <span class="n">person</span><span class="o">.</span><span class="n">toXML</span>
+</span><span class='line'>          <span class="o">}&lt;/</span><span class="n">persons</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>    <span class="o">&lt;/</span><span class="n">byline</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>object Byline { 
-</span><span class='line'>   def fromXML(node: scala.xml.NodeSeq): Byline = 
-</span><span class='line'>     new Byline( 
-</span><span class='line'>       name = (node \ "@name").text, 
-</span><span class='line'>       title = (node \ "@title").text, 
-</span><span class='line'>       List[Person]((node \ "person").toList map { s =&gt; Person.fromXML(s) 
-</span><span class='line'>}: _*)) 
+</span><span class='line'><span class="o">}</span>
 </span><span class='line'>
-</span><span class='line'>} </span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="k">object</span> <span class="nc">Byline</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">fromXML</span><span class="o">(</span><span class="n">node</span><span class="k">:</span> <span class="kt">scala.xml.NodeSeq</span><span class="o">)</span><span class="k">:</span> <span class="kt">Byline</span> <span class="o">=</span>
+</span><span class='line'>    <span class="k">new</span> <span class="nc">Byline</span><span class="o">(</span>
+</span><span class='line'>      <span class="n">name</span> <span class="k">=</span> <span class="o">(</span><span class="n">node</span> <span class="o">\</span> <span class="s">&quot;@name&quot;</span><span class="o">).</span><span class="n">text</span><span class="o">,</span>
+</span><span class='line'>      <span class="n">title</span> <span class="k">=</span> <span class="o">(</span><span class="n">node</span> <span class="o">\</span> <span class="s">&quot;@title&quot;</span><span class="o">).</span><span class="n">text</span><span class="o">,</span>
+</span><span class='line'>      <span class="nc">List</span><span class="o">[</span><span class="kt">Person</span><span class="o">]((</span><span class="n">node</span> <span class="o">\</span> <span class="s">&quot;person&quot;</span><span class="o">).</span><span class="n">toList</span> <span class="n">map</span> <span class="o">{</span> <span class="n">s</span> <span class="k">=&gt;</span> <span class="nc">Person</span><span class="o">.</span><span class="n">fromXML</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="o">}</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-
-<p></p>
 
 <p>In my opinion this is where you start to see the real power of Scala by calling .toList on the sequence of person nodes you can then map this to a list of people. Person will have its own corresponding toXML implementation as well. We remove those horrible null checks and cumbersom for loops and my favourite removing all the static xPath constants. No need to worry about name spaces either.</p>
 
@@ -242,34 +260,32 @@ Person objects.</p>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public Byline parseByline(Element bylineElement) { 
-</span><span class='line'>    Byline byline = null; 
-</span><span class='line'>    if (bylineElement != null) { 
-</span><span class='line'>        byline = new Byline(); 
-</span><span class='line'>        byline.setName(bylineElement.attributeValue("name")); 
-</span><span class='line'>        byline.setTitle(bylineElement.attributeValue("title")); 
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">Byline</span> <span class="nf">parseByline</span><span class="o">(</span><span class="n">Element</span> <span class="n">bylineElement</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Byline</span> <span class="n">byline</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">bylineElement</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">byline</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Byline</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">byline</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="n">bylineElement</span><span class="o">.</span><span class="na">attributeValue</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">byline</span><span class="o">.</span><span class="na">setTitle</span><span class="o">(</span><span class="n">bylineElement</span><span class="o">.</span><span class="na">attributeValue</span><span class="o">(</span><span class="s">&quot;title&quot;</span><span class="o">));</span>
 </span><span class='line'>
-</span><span class='line'>        List&lt;Element&gt; persons =  BYLINE_PERSON_XPATH_SELECTOR.selectNodes(bylineElement); 
-</span><span class='line'>        for (Element element : persons) { 
-</span><span class='line'>           Person person = parsePerson(element); 
-</span><span class='line'>           byline.getPersons().add(person); 
-</span><span class='line'>        } 
-</span><span class='line'>    } 
-</span><span class='line'>    return byline; 
-</span><span class='line'>} 
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Element</span><span class="o">&gt;</span> <span class="n">persons</span> <span class="o">=</span>  <span class="n">BYLINE_PERSON_XPATH_SELECTOR</span><span class="o">.</span><span class="na">selectNodes</span><span class="o">(</span><span class="n">bylineElement</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Element</span> <span class="n">element</span> <span class="o">:</span> <span class="n">persons</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>           <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="n">parsePerson</span><span class="o">(</span><span class="n">element</span><span class="o">);</span>
+</span><span class='line'>           <span class="n">byline</span><span class="o">.</span><span class="na">getPersons</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">person</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">byline</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
 </span><span class='line'>
-</span><span class='line'>private Person parsePerson(Element element) { 
-</span><span class='line'>    Person person = new Person(); 
-</span><span class='line'>    person.setThumbnail(getAbsoluteImageHref(element.attributeValue("thumbnail"))); 
-</span><span class='line'>    person.setFunction(BYLINE_PERSON_FUNCTION_XPATH_SELECTOR.valueOf(element)); 
+</span><span class='line'><span class="kd">private</span> <span class="n">Person</span> <span class="nf">parsePerson</span><span class="o">(</span><span class="n">Element</span> <span class="n">element</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">person</span><span class="o">.</span><span class="na">setThumbnail</span><span class="o">(</span><span class="n">getAbsoluteImageHref</span><span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="na">attributeValue</span><span class="o">(</span><span class="s">&quot;thumbnail&quot;</span><span class="o">)));</span>
+</span><span class='line'>    <span class="n">person</span><span class="o">.</span><span class="na">setFunction</span><span class="o">(</span><span class="n">BYLINE_PERSON_FUNCTION_XPATH_SELECTOR</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">element</span><span class="o">));</span>
 </span><span class='line'>
-</span><span class='line'>    person.setName(BYLINE_PERSON_NAME_XPATH_SELECTOR.valueOf(element)); 
-</span><span class='line'>    return person; 
-</span><span class='line'>} 
+</span><span class='line'>    <span class="n">person</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="n">BYLINE_PERSON_NAME_XPATH_SELECTOR</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">element</span><span class="o">));</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">person</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
-<p></p>
 
 <h3>Plugging it together Using scala&rsquo;s XML Pattern Matching</h3>
 
@@ -287,21 +303,32 @@ Person objects.</p>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>object AssetFactory { 
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'>
+</span><span class='line'><span class="k">package</span> <span class="nn">com.cookybear.content.asset.factory</span>
 </span><span class='line'>
-</span><span class='line'>   def factory(node: scala.xml.Node): Asset = { 
-</span><span class='line'>     val trimmedNode = scala.xml.Utility.trim(node) 
+</span><span class='line'><span class="k">import</span> <span class="nn">com.cookybear.content.asset.Asset</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">com.cookybear.content.asset.Story</span>
 </span><span class='line'>
-</span><span class='line'>     trimmedNode match { 
-</span><span class='line'>       case &lt;story&gt;{children @ _*}&lt;/story&gt; =&gt; Story.fromXML(trimmedNode) 
-</span><span class='line'>     } 
+</span><span class='line'><span class="k">object</span> <span class="nc">AssetFactory</span> <span class="o">{</span>
 </span><span class='line'>
-</span><span class='line'>   } 
+</span><span class='line'>  <span class="k">def</span> <span class="n">factory</span><span class="o">(</span><span class="n">node</span><span class="k">:</span> <span class="kt">scala.xml.Node</span><span class="o">)</span><span class="k">:</span> <span class="kt">Asset</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">trimmedNode</span> <span class="k">=</span> <span class="n">scala</span><span class="o">.</span><span class="n">xml</span><span class="o">.</span><span class="nc">Utility</span><span class="o">.</span><span class="n">trim</span><span class="o">(</span><span class="n">node</span><span class="o">)</span>
 </span><span class='line'>
-</span><span class='line'>} </span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>    <span class="n">trimmedNode</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">case</span> <span class="o">&lt;</span><span class="n">story</span><span class="o">&gt;{</span> <span class="n">children</span> <span class="k">@</span> <span class="k">_</span><span class="o">*</span> <span class="o">}&lt;/</span><span class="n">story</span><span class="o">&gt;</span> <span class="k">=&gt;</span> <span class="nc">Story</span><span class="o">.</span><span class="n">fromXML</span><span class="o">(</span><span class="n">trimmedNode</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-
-<p></p>
 
 <h3>Testability</h3>
 
@@ -325,24 +352,37 @@ Person objects.</p>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>@RunWith(classOf[JUnitRunner])
-</span><span class='line'>class BylineSpec extends XmlDataSpec {
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">package</span> <span class="nn">com.cookybear.content.asset</span>
 </span><span class='line'>
-</span><span class='line'>  describe("A Byline with a list of authors") {
-</span><span class='line'>    val byline = Byline.fromXML(xmlFixture("/xml/byline.xml"))
+</span><span class='line'><span class="k">import</span> <span class="nn">com.cookybear.content.XmlDataSpec</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.junit.runner.RunWith</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.scalatest.junit.JUnitRunner</span>
 </span><span class='line'>
-</span><span class='line'>    it("should have name and title") {
-</span><span class='line'>      assert(byline.name === "By AJP Taylor & Adam Brookes & Alan Hansen")
-</span><span class='line'>      assert(byline.title === "Historian")
-</span><span class='line'>    }
+</span><span class='line'><span class="nd">@RunWith</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">JUnitRunner</span><span class="o">])</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">BylineSpec</span> <span class="k">extends</span> <span class="nc">XmlDataSpec</span> <span class="o">{</span>
 </span><span class='line'>
-</span><span class='line'>    it("should contain a list of people") {
-</span><span class='line'>      byline.persons must have length (3)
-</span><span class='line'>    }
+</span><span class='line'>  <span class="n">describe</span><span class="o">(</span><span class="s">&quot;A Byline with a list of authors&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">byline</span> <span class="k">=</span> <span class="nc">Byline</span><span class="o">.</span><span class="n">fromXML</span><span class="o">(</span><span class="n">xmlFixture</span><span class="o">(</span><span class="s">&quot;/xml/byline.xml&quot;</span><span class="o">))</span>
 </span><span class='line'>
-</span><span class='line'>  }
+</span><span class='line'>    <span class="n">it</span><span class="o">(</span><span class="s">&quot;should have name and title&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">assert</span><span class="o">(</span><span class="n">byline</span><span class="o">.</span><span class="n">name</span> <span class="o">===</span> <span class="s">&quot;By AJP Taylor &amp; Adam Brookes &amp; Alan Hansen&quot;</span><span class="o">)</span>
+</span><span class='line'>      <span class="n">assert</span><span class="o">(</span><span class="n">byline</span><span class="o">.</span><span class="n">title</span> <span class="o">===</span> <span class="s">&quot;Historian&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>    <span class="n">it</span><span class="o">(</span><span class="s">&quot;should contain a list of people&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">byline</span><span class="o">.</span><span class="n">persons</span> <span class="n">must</span> <span class="n">have</span> <span class="n">length</span> <span class="o">(</span><span class="mi">3</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>What I like (lots!)</h3>
@@ -360,14 +400,25 @@ also having to define lots of custom adapters which are a disaster, not to menti
 <h3>Improvements</h3>
 
 <ul>
-<li><p>I think there is probably a nicer way to handle conditional elements using None and Some  <code>{if (!title.isEmpty) &lt;title&gt;{title}&lt;/title&gt;}</code></p></li>
-<li><p>Inline xml in pojos is ok for small snippets but I could see this becoming messy if care wasn&rsquo;t taken</p></li>
+<li>I think there is probably a nicer way to handle conditional elements using None and Some</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="o">{</span><span class="k">if</span> <span class="o">(!</span><span class="n">title</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="o">&lt;</span><span class="n">title</span><span class="o">&gt;{</span><span class="n">title</span><span class="o">}&lt;/</span><span class="n">title</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Inline xml in pojos is ok for small snippets but I could see this becoming messy if care wasn&rsquo;t taken</li>
 </ul>
 
 
 <h3>The code</h3>
 
-<p>I&rsquo;ve put the sample code on github, here. You&rsquo;ll need SBT installed and once you have checked it out simple run sbt test to see the unit tests. In addition to this Main.sala is a simple test harness for processing a story. Please remember I&rsquo;m not a scala expert, I&rsquo;m pretty sure there is a way to improve the double .toList calls in Media.scala using zip and also some people may suggest that some of the functions inside .toList aren&rsquo;t readable but once you join the Scala world you will see they pretty clear.</p>
+<p>I&rsquo;ve put the sample code on github, <a href="https://github.com/JonCook/scala-xml-parsing-example">here</a>. You&rsquo;ll need SBT installed and once you have checked it out simple run sbt test to see the unit tests. In addition to this Main.sala is a simple test harness for processing a story. Please remember I&rsquo;m not a scala expert, I&rsquo;m pretty sure there is a way to improve the double .toList calls in Media.scala using zip and also some people may suggest that some of the functions inside .toList aren&rsquo;t readable but I think they are if you are familiar with scala.</p>
+
+<p>Gists are available <a href="https://gist.github.com/JonCook/8397116">here</a> for the code here.</p>
 
 <h3>Conclusion</h3>
 
